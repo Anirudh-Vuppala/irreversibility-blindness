@@ -24,7 +24,7 @@ Target at least 2,000 labeled pairs overall, with at least 30% minimal pairs, an
 - `reversibility/labeler.py`: ground-truth labels by breadth-first search over restoring action sequences, horizons 1–3.
 - `reversibility/generate.py`: scenario and minimal-pair generator that writes JSON lines.
 - `data/sandbox.jsonl`: starter labeled dataset. It is kept as imported; choose a different output path when regenerating data.
-- `scienceworld_slice/`: ScienceWorld smoke check and the later small transfer slice.
+- `scienceworld_slice/`: ScienceWorld smoke check, canonicalization and replay-based slice generator.
 - `experiments/`, `kaggle/`, `results/`, `figures/`: reserved for later project work.
 - `tests/test_labels.py`: label checks for every designed minimal pair.
 
@@ -54,6 +54,25 @@ python -m reversibility.generate --scenarios 265 --seed 0 --out results/sandbox-
 ## ScienceWorld replay constraint
 
 ScienceWorld 1.2.3 exposes `get_task_names()`, `getObjectTree()`, and `get_gold_action_sequence()`. The installed API has no state save/restore methods. To reconstruct a sampled state, load and reset the same task variation, then replay its recorded action history. The smoke test loads a task, steps once, and exercises the task-name, object-tree, and gold-action APIs.
+
+The Day 2 slice targets the installed task names `chemistry-mix`, `change-the-state-of-matter-of`, and `find-plant`. It samples gold-trajectory prefixes with histories shorter than 15 actions and filters `get_valid_action_object_combinations()` to mix, pour, activate/deactivate, open/close, move, and pick-up actions on the same object IDs. Depths 1 and 2 are labeled for every pair; depth 3 is run for a deterministic sample. The generator can resume from IDs already present in its output:
+
+```bash
+python -m scienceworld_slice.generate --limit 300 --workers 4 --output data/scienceworld.jsonl
+```
+
+Before comparison, the generator removes move-counter fields and rounds temperatures to 0.1°C. A state restored except for temperature values is labeled partially reversible. In a replay check, two identical task histories differed only in seven temperature fields by 0.01°C before this normalization.
+
+The first Day 2 generation attempt was stopped at 118 partial rows after checking the installed API. In ScienceWorld 1.2.3, `step()` returns the complete valid-action list in `info["valid"]`, not an action-level boolean; the generator now fails fast on that API mismatch. At `chemistry-mix` variation 0, `mix door to kitchen` appeared in the action list and returned “That container is empty, so there are no items to mix.” The canonical tree also changed after that step: seven temperatures drifted (including 10.0°C to 9.2°C in a cup) and the outside fountain/ground water object structure changed. These time-dependent changes prevent reliable restoration labels under the current comparison method. `results/scienceworld_generation_stopped_partial.jsonl` contains those 118 incomplete diagnostic rows, and `results/scienceworld_generator_smoke_unvalidated.jsonl` contains two earlier smoke rows. Neither is the ScienceWorld slice. Resolve how to handle this state evolution before resuming generation.
+
+## Local RQ1 smoke run
+
+The extraction script saves rendered prompts, an ID-to-array index, and per-row float16 hidden-state arrays under `results/`. It appends the prompt before inference and the index after a successful save, so a rerun resumes completed rows. The probe script uses three scenario-level splits and defaults to 1,000 bootstrap resamples:
+
+```bash
+python -m experiments.extract_hidden --model Qwen/Qwen2.5-0.5B-Instruct --limit 12
+python -m experiments.probes --model Qwen/Qwen2.5-0.5B-Instruct --limit 12 --task both --position both --horizon 3
+```
 
 ## Labelling rules
 
