@@ -82,9 +82,9 @@ def _rebuild(job, extra_actions=()):
     env.load(job["task_name"], job["variation"], "", generateGoldPath=False)
     observation, info = env.reset()
     for action in [*job["history"], *extra_actions]:
+        if not _action_is_available(env, action):
+            raise RuntimeError(f"Replay action is absent from pre-step candidates: {action!r}")
         observation, _, _, info = env.step(action)
-        if not _step_action_valid(info, action):
-            raise RuntimeError(f"Replay action became invalid: {action!r}")
     return observation, info
 
 
@@ -94,16 +94,14 @@ def _action_rows(env):
     return strings, templates
 
 
-def _step_action_valid(info, action):
-    value = info.get("valid")
-    if not isinstance(value, bool):
+def _action_is_available(env, action):
+    """Check pre-step candidate membership; this does not claim the action succeeds."""
+    candidates = env.get_valid_action_object_combinations()
+    if not isinstance(candidates, list) or any(not isinstance(item, str) for item in candidates):
         raise RuntimeError(
-            "Unsupported ScienceWorld step() validity field: expected a boolean "
-            f"for action {action!r}, got {type(value).__name__}. "
-            "ScienceWorld 1.2.3 returns the full valid-action list in info['valid']; "
-            "the action-level restoration check must be resolved before generating labels."
+            "ScienceWorld get_valid_action_object_combinations() must return a list of strings"
         )
-    return value
+    return action in candidates
 
 
 def _run_candidate(job, max_depth):
@@ -118,16 +116,16 @@ def _run_candidate(job, max_depth):
     initial_ids = {int(value) for value in job["object_ids"]}
     allowed_ids = expand_with_parents(initial_ids, parent_index)
 
-    observation, _, _, info = _WORKER_ENV.step(job["action_text"])
-    if not _step_action_valid(info, job["action_text"]):
+    if not _action_is_available(_WORKER_ENV, job["action_text"]):
         return {
             "status": "invalid",
             "id": job["id"],
-            "reason": "candidate rejected by ScienceWorld step()",
+            "reason": "candidate is absent from the pre-step action list",
             "seconds": time.perf_counter() - started,
             "rebuild_count": rebuild_count,
             "evaluated_edges": evaluated_edges,
         }
+    observation, _, _, _ = _WORKER_ENV.step(job["action_text"])
     post = canonicalize_tree(_WORKER_ENV.getObjectTree())
 
     exact_depth = 0 if state_key(post) == state_key(target) else None
@@ -151,10 +149,10 @@ def _run_candidate(job, max_depth):
             for action in candidates:
                 _rebuild(job, [job["action_text"], *path])
                 rebuild_count += 1
-                observation, _, _, action_info = _WORKER_ENV.step(action)
-                evaluated_edges += 1
-                if not _step_action_valid(action_info, action):
+                if not _action_is_available(_WORKER_ENV, action):
                     continue
+                observation, _, _, _ = _WORKER_ENV.step(action)
+                evaluated_edges += 1
                 next_state = canonicalize_tree(_WORKER_ENV.getObjectTree())
                 new_path = (*path, action)
 
@@ -347,11 +345,12 @@ def collect_proposals(tasks, variations_per_task, max_history, actions_per_verb,
                     if prefix < stop_prefix:
                         action = gold[prefix]
                         gold_item = metadata.get(action)
-                        observation, _, _, info = env.step(action)
-                        if not _step_action_valid(info, action):
+                        if not _action_is_available(env, action):
                             raise RuntimeError(
-                                f"Gold action invalid at {task} variation {variation} step {prefix}: {action}"
+                                f"Gold action is absent from pre-step candidates at {task} "
+                                f"variation {variation} step {prefix}: {action}"
                             )
+                        observation, _, _, _ = env.step(action)
                         history.append(action)
                         history_object_ids.append(
                             [int(value) for value in (gold_item or {}).get("obj_ids", [])]

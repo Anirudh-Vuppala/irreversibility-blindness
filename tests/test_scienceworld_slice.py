@@ -11,7 +11,7 @@ from scienceworld_slice.core import (
     state_key,
 )
 from scienceworld_slice.generate import mark_minimal_pairs, round_robin
-from scienceworld_slice.generate import _step_action_valid
+from scienceworld_slice.generate import _action_is_available
 
 
 def test_canonicalize_removes_move_counters_and_rounds_temperatures():
@@ -72,11 +72,20 @@ def test_restoration_candidates_restrict_verbs_and_object_ids():
     ]
 
 
-def test_step_validity_field_must_be_boolean():
-    assert _step_action_valid({"valid": True}, "open cupboard") is True
-    assert _step_action_valid({"valid": False}, "open cupboard") is False
-    with pytest.raises(RuntimeError, match="returns the full valid-action list"):
-        _step_action_valid({"valid": ["open cupboard"]}, "open cupboard")
+def test_action_availability_uses_pre_step_list_membership_not_truthiness():
+    class CandidateEnv:
+        def __init__(self, candidates):
+            self.candidates = candidates
+
+        def get_valid_action_object_combinations(self):
+            return self.candidates
+
+    env = CandidateEnv(["mix door to kitchen"])
+    assert _action_is_available(env, "mix door to kitchen") is True
+    assert _action_is_available(env, "close cupboard") is False
+
+    with pytest.raises(RuntimeError, match="must return a list of strings"):
+        _action_is_available(CandidateEnv(True), "mix door to kitchen")
 
 
 def test_horizon_labels_use_first_exact_or_partial_restoration():
