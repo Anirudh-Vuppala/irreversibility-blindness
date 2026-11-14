@@ -21,6 +21,7 @@ from experiments.extract_hidden import stratified_limit
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LABEL_MAP = {"reversible": 0, "partially_reversible": 1, "irreversible": 2}
+CLASS_NAMES = {0: "reversible", 1: "partially_reversible", 2: "irreversible"}
 
 
 def select_rows(rows, limit, label_key="label"):
@@ -276,7 +277,7 @@ def _aggregate(records, path):
         stream.flush()
 
 
-def run_probes(examples, model_name, mode, positions, horizon, seed, bootstrap_resamples, scores_path, summary_path, failures_path):
+def run_probes(examples, model_name, mode, positions, horizon, seed, bootstrap_resamples, scores_path, summary_path, predictions_path, failures_path):
     failures = 0
     if len(examples) < 2:
         raise ValueError("At least two labeled rows are needed")
@@ -389,6 +390,24 @@ def run_probes(examples, model_name, mode, positions, horizon, seed, bootstrap_r
                     results.append(probe_row)
                     _append(scores_path, probe_row)
                     per_split_probe[(split_number, position, layer)] = (probe_row, probe_pred)
+                    for row_index, predicted, probabilities in zip(test_idx, probe_pred, probe_prob):
+                        example = examples[int(row_index)]
+                        predicted = int(predicted)
+                        _append(predictions_path, {
+                            "id": str(example["id"]),
+                            "scenario_id": example["scenario_id"],
+                            "group_id": example.get("group_id"),
+                            "label_mode": mode,
+                            "horizon": horizon,
+                            "split": split_number,
+                            "position": position,
+                            "layer": layer,
+                            "control": "probe",
+                            "gold_label": example["label"],
+                            "predicted_class": predicted,
+                            "predicted_label": CLASS_NAMES[predicted],
+                            "probabilities": [float(value) for value in probabilities],
+                        })
 
                     shuffled = y_train.copy()
                     np.random.default_rng(seed + split_number * 1000 + layer).shuffle(shuffled)
@@ -478,6 +497,7 @@ def main(argv=None):
     output_dir.mkdir(parents=True, exist_ok=True)
     failures_path = output_dir / "failures.jsonl"
     scores_path = output_dir / "scores.jsonl"
+    predictions_path = output_dir / "predictions.jsonl"
     summary_path = output_dir / "summary.jsonl"
     index_rows, parse_errors = read_jsonl(index_path)
     if parse_errors:
@@ -501,7 +521,8 @@ def main(argv=None):
         try:
             summary = run_probes(
                 examples, args.model, mode, positions, args.horizon, args.seed,
-                args.bootstrap_resamples, scores_path, summary_path, failures_path,
+                args.bootstrap_resamples, scores_path, summary_path, predictions_path,
+                failures_path,
             )
             summaries.append(summary)
             failures += summary["failures"]
@@ -529,6 +550,7 @@ def main(argv=None):
         "failures": failures,
         "elapsed_seconds": time.perf_counter() - started,
         "scores": str(scores_path),
+        "predictions": str(predictions_path),
         "aggregate_summary": str(summary_path),
         "failure_log": str(failures_path),
     }
