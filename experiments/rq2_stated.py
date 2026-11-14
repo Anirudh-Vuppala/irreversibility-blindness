@@ -13,7 +13,7 @@ from experiments.model_runtime import (
     REPO_ROOT,
     append_jsonl,
     generate_chat,
-    load_cpu_model,
+    load_model,
     parse_json_object,
     read_jsonl,
     render_chat,
@@ -191,6 +191,7 @@ def main(argv=None):
     parser.add_argument("--probe-position", choices=("last", "mean"), default="last")
     parser.add_argument("--probe-layer", default="last", help="integer layer, last, or all")
     parser.add_argument("--threads", type=int, default=2)
+    parser.add_argument("--device", choices=("cpu", "auto"), default="cpu")
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--seed", type=int, default=17)
     args = parser.parse_args(argv)
@@ -226,7 +227,7 @@ def main(argv=None):
 
     started = time.perf_counter()
     try:
-        tokenizer, model = load_cpu_model(args.model, args.threads)
+        tokenizer, model = load_model(args.model, args.threads, args.device)
     except Exception as exc:
         append_jsonl(failures_path, {
             "stage": "model-load", "model": args.model,

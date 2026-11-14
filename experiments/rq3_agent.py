@@ -14,7 +14,7 @@ from experiments.model_runtime import (
     REPO_ROOT,
     append_jsonl,
     generate_chat,
-    load_cpu_model,
+    load_model,
     parse_json_object,
     read_jsonl,
     render_chat,
@@ -219,6 +219,7 @@ def main(argv=None):
     parser.add_argument("--horizon", type=int, choices=(1, 2, 3), default=3)
     parser.add_argument("--seed", type=int, default=29)
     parser.add_argument("--threads", type=int, default=2)
+    parser.add_argument("--device", choices=("cpu", "auto"), default="cpu")
     parser.add_argument("--max-turns", type=int, default=8)
     parser.add_argument("--max-new-tokens", type=int, default=160)
     args = parser.parse_args(argv)
@@ -271,7 +272,7 @@ def main(argv=None):
     }
     conditions = ("neutral", "explicit-carefulness") if args.condition == "both" else (args.condition,)
     try:
-        tokenizer, model = load_cpu_model(args.model, args.threads)
+        tokenizer, model = load_model(args.model, args.threads, args.device)
     except Exception as exc:
         append_jsonl(failures_path, {"stage": "model-load", "model": args.model, "error_type": type(exc).__name__, "error": str(exc)})
         raise

@@ -1,4 +1,4 @@
-"""Small local CPU runtime shared by stated-answer and sandbox-agent experiments."""
+"""Shared CPU and Kaggle GPU runtime for stated-answer and sandbox-agent experiments."""
 import json
 import os
 from pathlib import Path
@@ -32,21 +32,46 @@ def read_jsonl(path):
     return rows, errors
 
 
-def load_cpu_model(model_name, threads=2):
+def load_model(model_name, threads=2, device="cpu"):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     torch.set_num_threads(threads)
     cache_dir = REPO_ROOT / ".cache" / "huggingface"
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_name, use_fast=True, cache_dir=cache_dir
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch.float32,
-        low_cpu_mem_usage=True,
-        cache_dir=cache_dir,
-    ).to("cpu")
+    if device == "auto":
+        if not torch.cuda.is_available():
+            raise RuntimeError("--device auto requires a CUDA GPU")
+        token = None
+        try:
+            from kaggle_secrets import UserSecretsClient
+
+            token = UserSecretsClient().get_secret("HF_TOKEN")
+        except ImportError:
+            pass
+        auth = {"token": token} if token else {}
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name, use_fast=True, cache_dir=cache_dir, **auth
+        )
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,
+            low_cpu_mem_usage=True,
+            device_map="auto",
+            cache_dir=cache_dir,
+            **auth,
+        )
+    elif device == "cpu":
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name, use_fast=True, cache_dir=cache_dir
+        )
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float32,
+            low_cpu_mem_usage=True,
+            cache_dir=cache_dir,
+        ).to("cpu")
+    else:
+        raise ValueError(f"Unsupported device mode: {device}")
     model.eval()
     return tokenizer, model
 
@@ -67,10 +92,11 @@ def generate_chat(tokenizer, model, messages, max_new_tokens=160):
         return_tensors="pt",
         return_dict=True,
     )
-    input_ids = encoded["input_ids"].to("cpu")
+    input_device = model.get_input_embeddings().weight.device
+    input_ids = encoded["input_ids"].to(input_device)
     attention_mask = encoded.get("attention_mask")
     if attention_mask is not None:
-        attention_mask = attention_mask.to("cpu")
+        attention_mask = attention_mask.to(input_device)
     input_len = int(input_ids.shape[-1])
     with torch.inference_mode():
         output = model.generate(

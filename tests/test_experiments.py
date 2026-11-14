@@ -19,6 +19,7 @@ from experiments.probes import (
 from experiments.rq2_stated import parse_stated_label, score_answers, select_stated_pairs
 from experiments.rq2_stated import _probe_rows
 from experiments.rq3_agent import initial_messages, run_episode, select_paired_groups, summarize_outcomes
+from experiments.model_runtime import generate_chat
 from reversibility.sandbox import empty_state, render_state
 
 
@@ -34,6 +35,34 @@ def test_action_token_span_errors_are_not_silently_ignored():
         action_char_span("prefix only", "missing action")
     with pytest.raises(ValueError, match="No tokenizer offsets"):
         token_span_from_offsets([(0, 2), (4, 6)], (2, 4))
+
+
+def test_shared_generator_places_inputs_on_model_embedding_device():
+    import torch
+
+    class FakeTokenizer:
+        eos_token_id = 0
+
+        def apply_chat_template(self, *args, **kwargs):
+            return {"input_ids": torch.tensor([[1, 2]]), "attention_mask": torch.tensor([[1, 1]])}
+
+        def decode(self, tokens, skip_special_tokens=True):
+            return "ok"
+
+    class FakeModel:
+        def __init__(self):
+            self.devices = None
+
+        def get_input_embeddings(self):
+            return type("Embedding", (), {"weight": torch.zeros(1)})()
+
+        def generate(self, input_ids, attention_mask, **kwargs):
+            self.devices = (input_ids.device, attention_mask.device)
+            return torch.cat((input_ids, torch.tensor([[3]])), dim=1)
+
+    model = FakeModel()
+    assert generate_chat(FakeTokenizer(), model, [], max_new_tokens=1) == "ok"
+    assert model.devices == (torch.device("cpu"), torch.device("cpu"))
 
 
 def test_model_slug_and_scenario_stratified_limit():
