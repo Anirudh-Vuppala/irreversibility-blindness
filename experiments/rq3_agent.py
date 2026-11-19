@@ -330,6 +330,7 @@ def main(argv=None):
                 })
             append_jsonl(responses_path, outcome)
             completed.add((row_id, condition))
+            print(f"{condition} {len(completed)}/{len(task_rows) * len(conditions)} episodes, {time.perf_counter() - started:.0f}s", flush=True)
 
     all_responses, _ = read_jsonl(responses_path)
     summaries = {

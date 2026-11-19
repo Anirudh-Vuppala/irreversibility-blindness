@@ -67,9 +67,7 @@ def _binary_label(label):
     return None
 
 
-def select_stated_pairs(rows, limit, horizon, label_mode, seed=17):
-    if limit < 2 or limit % 2:
-        raise ValueError("RQ2 limit is the number of rows and must be even, with at least one pair")
+def candidate_pairs(rows, horizon, label_mode):
     grouped = defaultdict(list)
     for row in rows:
         label = label_at_horizon(row, horizon)
@@ -88,6 +86,13 @@ def select_stated_pairs(rows, limit, horizon, label_mode, seed=17):
             # Prefer an irreversible/reversible contrast when available.
             pair = next((p for p in distinct if {p[0]["_rq2_gold_label"], p[1]["_rq2_gold_label"]} == {"reversible", "irreversible"}), distinct[0])
             candidates.append({"pair_id": group_id, "rows": pair})
+    return candidates
+
+
+def select_stated_pairs(rows, limit, horizon, label_mode, seed=17):
+    if limit < 2 or limit % 2:
+        raise ValueError("RQ2 limit is the number of rows and must be even, with at least one pair")
+    candidates = candidate_pairs(rows, horizon, label_mode)
     import random
     random.Random(seed).shuffle(candidates)
     if len(candidates) < limit // 2:
@@ -283,6 +288,8 @@ def main(argv=None):
             })
         append_jsonl(responses_path, response)
         completed.add(row_id)
+        if len(completed) % 50 == 0:
+            print(f"answered {len(completed)}/{len(selected)} rows, {time.perf_counter() - started:.0f}s", flush=True)
 
     probe_predictions, _ = _probe_rows(
         args.probe_predictions, args.horizon, args.label_mode,

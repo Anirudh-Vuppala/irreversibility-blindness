@@ -159,10 +159,12 @@ def extract_one(model, tokenizer, row, output_dir, max_tokens, prompt_callback=N
     if prompt_callback is not None:
         prompt_callback(prompt_record)
 
-    input_ids = encoded["input_ids"].to("cpu")
+    started = time.perf_counter()
+    input_device = model.get_input_embeddings().weight.device
+    input_ids = encoded["input_ids"].to(input_device)
     attention_mask = encoded.get("attention_mask")
     if attention_mask is not None:
-        attention_mask = attention_mask.to("cpu")
+        attention_mask = attention_mask.to(input_device)
     with torch.inference_mode():
         output = model(
             input_ids=input_ids,
@@ -198,6 +200,7 @@ def extract_one(model, tokenizer, row, output_dir, max_tokens, prompt_callback=N
         "positions": ["last_action_token", "mean_action_tokens"],
         "action_token_span": [start, end],
         "input_token_count": int(encoded["input_ids"].shape[1]),
+        "extract_seconds": time.perf_counter() - started,
     }
     return prompt_record, index_record
 
@@ -210,6 +213,7 @@ def main(argv=None):
     parser.add_argument("--output-dir")
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--threads", type=int, default=2)
+    parser.add_argument("--device", choices=("cpu", "auto"), default="cpu")
     args = parser.parse_args(argv)
     if args.limit < 1 or args.max_tokens < 1 or args.threads < 1:
         parser.error("limit, max-tokens, and threads must be positive")
@@ -239,24 +243,11 @@ def main(argv=None):
         raise SystemExit(f"Prompt log has {len(prompt_errors)} malformed rows; see {failures_path}")
     prompt_ids = {str(row.get("id")) for row in prompts_existing}
 
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from experiments.model_runtime import load_model
 
-    torch.set_num_threads(args.threads)
-    cache_dir = REPO_ROOT / ".cache" / "huggingface"
     started = time.perf_counter()
     try:
-        tokenizer = AutoTokenizer.from_pretrained(
-            args.model, use_fast=True, token=False, cache_dir=cache_dir
-        )
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model,
-            torch_dtype=torch.float32,
-            low_cpu_mem_usage=True,
-            token=False,
-            cache_dir=cache_dir,
-        ).to("cpu")
-        model.eval()
+        tokenizer, model = load_model(args.model, args.threads, args.device)
     except Exception as exc:
         save_jsonl(failures_path, {
             "stage": "model-load",
@@ -294,6 +285,8 @@ def main(argv=None):
             save_jsonl(index_path, index_record)
             existing.add(row_id)
             completed += 1
+            if completed % 50 == 0:
+                print(f"extracted {len(existing)}/{len(selected)} rows, {time.perf_counter() - started:.0f}s", flush=True)
         except Exception as exc:
             failed += 1
             save_jsonl(failures_path, {
@@ -313,7 +306,7 @@ def main(argv=None):
         "completed_this_run": completed,
         "failed_this_run": failed,
         "array_layout": "layers x [last_action_token, mean_action_tokens] x hidden_size; float16",
-        "device": "cpu",
+        "device": args.device,
         "elapsed_seconds": time.perf_counter() - started,
         "prompts": str(prompt_path),
         "index": str(index_path),

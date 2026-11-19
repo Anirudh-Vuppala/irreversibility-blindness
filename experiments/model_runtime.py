@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+import sys
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -37,7 +38,7 @@ def load_model(model_name, threads=2, device="cpu"):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     torch.set_num_threads(threads)
-    cache_dir = REPO_ROOT / ".cache" / "huggingface"
+    cache_dir = os.environ.get("IRREV_HF_CACHE") or REPO_ROOT / ".cache" / "huggingface"
     if device == "auto":
         if not torch.cuda.is_available():
             raise RuntimeError("--device auto requires a CUDA GPU")
@@ -48,6 +49,8 @@ def load_model(model_name, threads=2, device="cpu"):
             token = UserSecretsClient().get_secret("HF_TOKEN")
         except ImportError:
             pass
+        except Exception as exc:
+            print(f"HF_TOKEN Kaggle secret unavailable ({type(exc).__name__}); loading without a token", file=sys.stderr)
         auth = {"token": token} if token else {}
         tokenizer = AutoTokenizer.from_pretrained(
             model_name, use_fast=True, cache_dir=cache_dir, **auth
