@@ -76,12 +76,14 @@ def test_rq2_and_rq3_done_checks_require_every_row(tmp_path):
     assert run_full.rq2_done(paths, {"a", "b"})
 
     _write_jsonl(paths.rq3 / "tasks.jsonl", [{"id": "x"}, {"id": "y"}])
-    (paths.rq3 / "summary.json").write_text("{}")
+    (paths.rq3 / "summary.json").write_text('{"max_turns": 8}')
     outcomes = [{"id": i, "condition": "neutral"} for i in ("x", "y")]
     _write_jsonl(paths.rq3 / "responses.jsonl", outcomes + [{"id": "x", "condition": "explicit-carefulness", "turn": 0}])
     assert not run_full.rq3_done(paths, 2)
     outcomes += [{"id": i, "condition": "explicit-carefulness"} for i in ("x", "y")]
     _write_jsonl(paths.rq3 / "responses.jsonl", outcomes)
+    assert not run_full.rq3_done(paths, 2)
+    (paths.rq3 / "summary.json").write_text('{"max_turns": 15}')
     assert run_full.rq3_done(paths, 2)
     assert not run_full.rq3_done(paths, 60)
 
@@ -94,3 +96,26 @@ def test_zip_contains_model_results_under_model_folder(tmp_path):
     assert zipfile.ZipFile(target).namelist() == [
         "Qwen_Qwen2.5-7B-Instruct/rq2/three-class-h3-neutral/summary.json"
     ]
+
+
+def test_only_runs_one_step_then_zips(tmp_path, monkeypatch, capsys):
+    calls = []
+    monkeypatch.setattr(run_full, "run_module", lambda paths, step, module, args: calls.append(step) or 0)
+    monkeypatch.setattr(run_full, "rq3_done", lambda paths, rows: bool(calls))
+    _write_jsonl(tmp_path / "in.jsonl", [{"id": "a", "labels_by_horizon": {"3": "reversible"}}])
+    code = run_full.main([
+        "--model", "m", "--input", str(tmp_path / "in.jsonl"), "--results-root", str(tmp_path / "r"),
+        "--zip-dir", str(tmp_path / "z"), "--only", "rq3",
+    ])
+    assert code == 0 and calls == ["rq3"]
+    assert (tmp_path / "z" / "m_results.zip").exists()
+    assert "steps: rq3, zip" in capsys.readouterr().out
+
+
+def test_stop_after_and_only_accept_every_step_and_exclude_each_other():
+    import pytest
+
+    for step in run_full.STEPS:
+        assert step in ("pilot", "disk", "extract", "rq2", "rq3", "zip")
+    with pytest.raises(SystemExit):
+        run_full.main(["--model", "m", "--only", "rq3", "--stop-after", "rq2"])

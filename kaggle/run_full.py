@@ -16,6 +16,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from experiments.extract_hidden import completed_ids, model_slug
 from experiments.model_runtime import append_jsonl, read_jsonl
 from experiments.rq2_stated import candidate_pairs, select_stated_pairs
+from experiments.rq3_agent import MAX_TURNS
 
 STEPS = ("pilot", "disk", "extract", "rq2", "rq3", "zip")
 RQ2_LABEL_MODE, RQ2_HORIZON, RQ2_CONDITION, RQ2_SEED = "three-class", 3, "neutral", 17
@@ -90,7 +91,8 @@ def rq2_done(paths, expected_ids):
 
 def rq3_done(paths, rq3_rows):
     tasks, _ = read_jsonl(paths.rq3 / "tasks.jsonl")
-    if len(tasks) != rq3_rows or not (paths.rq3 / "summary.json").exists():
+    summary = paths.rq3 / "summary.json"
+    if len(tasks) != rq3_rows or not summary.exists() or json.loads(summary.read_text()).get("max_turns") != MAX_TURNS:
         return False
     responses, _ = read_jsonl(paths.rq3 / "responses.jsonl")
     done = {(str(r.get("id")), r.get("condition")) for r in responses if "turn" not in r}
@@ -120,8 +122,11 @@ def main(argv=None):
     parser.add_argument("--pilot-rows", type=int, default=50)
     parser.add_argument("--rq2-pairs", type=int, help="default: every eligible minimal pair")
     parser.add_argument("--rq3-rows", type=int, default=60)
-    parser.add_argument("--stop-after", choices=STEPS, default="zip")
+    order = parser.add_mutually_exclusive_group()
+    order.add_argument("--stop-after", choices=STEPS, default="zip")
+    order.add_argument("--only", choices=STEPS, help="run one step (resuming it), then re-zip")
     args = parser.parse_args(argv)
+    steps = tuple(dict.fromkeys((args.only, "zip"))) if args.only else STEPS[:STEPS.index(args.stop_after) + 1]
 
     os.environ["PYTHONUNBUFFERED"] = "1"
     if args.hf_cache:
@@ -137,16 +142,17 @@ def main(argv=None):
     rq2_pairs = args.rq2_pairs or available_pairs
     common = ["--model", args.model, "--input", str(input_path), "--device", args.device]
     print(f"model={args.model} results={paths.root} input rows={len(rows)}")
+    print(gpu_report())
     print(f"RQ2 {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
     print(f"RQ3: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}")
+    print(f"steps: {', '.join(steps)}")
     incomplete = []
 
-    for step in STEPS[:STEPS.index(args.stop_after) + 1]:
+    for step in steps:
         if step == "pilot":
             if paths.pilot.exists():
                 print(f"\n=== pilot: done, {paths.pilot.read_text()}")
                 continue
-            print(gpu_report())
             run_module(paths, step, "experiments.extract_hidden",
                        [*common, "--limit", str(args.pilot_rows), "--output-dir", str(paths.extraction)])
             projection = pilot_projection(paths, len(rows))
@@ -199,7 +205,7 @@ def main(argv=None):
             target = zip_results(paths, Path(args.zip_dir))
             print(f"\n=== zip: {target} ({target.stat().st_size / 1e9:.2f} GB)")
 
-    print("\nINCOMPLETE:\n  " + "\n  ".join(incomplete) if incomplete else f"\nAll steps through {args.stop_after} complete.")
+    print("\nINCOMPLETE:\n  " + "\n  ".join(incomplete) if incomplete else f"\nAll steps complete: {', '.join(steps)}.")
     return 1 if incomplete else 0
 
 
