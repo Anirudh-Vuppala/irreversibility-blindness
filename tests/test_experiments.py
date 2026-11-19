@@ -17,7 +17,7 @@ from experiments.probes import (
     select_rows,
 )
 from experiments.rq2_stated import parse_stated_label, score_answers, select_stated_pairs
-from experiments.rq2_stated import _probe_rows
+from experiments.rq2_stated import _probe_rows, stated_messages
 from experiments.rq3_agent import initial_messages, run_episode, select_paired_groups, summarize_outcomes
 from experiments.model_runtime import generate_chat
 from reversibility.sandbox import empty_state, render_state
@@ -306,3 +306,53 @@ def test_rq3_summary_counts_max_turns_as_unfinished():
     result = summarize_outcomes(tasks, outcomes, "neutral")
     assert result["n_max_turns_without_finish"] == 1
     assert result["task_success_rate"] == 0.0
+
+
+def test_rq2_v2_prompt_lists_agent_tools_and_v1_is_unchanged():
+    from reversibility.sandbox import tools_text
+
+    row = {"task_text": "T", "state_text": "S", "action_text": 'delete_file(path="x")'}
+    v1_system, v1_user = (m["content"] for m in stated_messages(row, prompt_version="rq2-stated-v1"))
+    v2_system, v2_user = (m["content"] for m in stated_messages(row))
+    assert "Do not assume tools or recovery options that are not shown." in v1_system
+    assert "Available tools" not in v1_user
+    assert "Do not assume" not in v2_system
+    assert "Only the tools listed below exist, and the restoration horizon counts follow-up tool calls." in v2_system
+    assert f"Available tools:\n{tools_text()}\n\n" in v2_user
+    assert v2_user.replace(f"Available tools:\n{tools_text()}\n\n", "") == v1_user
+    assert v2_system.replace(
+        "Only the tools listed below exist, and the restoration horizon counts follow-up tool calls.",
+        "Do not assume tools or recovery options that are not shown.",
+    ) == v1_system
+    for tool in ("restore_from_trash", "restore_backup", "revert_file", "undo_send", "cancel_transfer", "withdraw_savings"):
+        assert f"- {tool}(" in v2_user
+
+
+def test_gold_restore_sequences_use_only_listed_tools():
+    from reversibility.sandbox import TOOL_SPECS
+
+    with open("data/sandbox.jsonl", encoding="utf-8") as stream:
+        rows = [json.loads(line) for line in stream]
+    used = {step.split("(", 1)[0] for row in rows for step in row.get("restore_sequence") or []}
+    assert used and used <= set(TOOL_SPECS)
+
+
+@pytest.mark.parametrize("logged", [
+    '{"id": "a", "parsed_label": "reversible"}',
+    '{"id": "a", "parsed_label": "reversible", "prompt_version": "rq2-stated-v1"}',
+])
+def test_rq2_refuses_to_resume_v1_outputs_as_v2(tmp_path, logged):
+    import experiments.rq2_stated as rq2
+
+    (tmp_path / "responses.jsonl").write_text(logged + "\n")
+    with pytest.raises(SystemExit, match="refusing to resume"):
+        rq2.main(["--model", "m", "--limit", "2", "--output-dir", str(tmp_path)])
+
+
+def test_rq2_summary_reports_gold_to_stated_confusion():
+    rows = [
+        {"id": "r", "group_id": "g", "label": "reversible", "horizon": 3},
+        {"id": "i", "group_id": "g", "label": "irreversible", "horizon": 3},
+    ]
+    result = score_answers(rows, {"r": "irreversible", "i": "irreversible"}, {}, 3, "three-class")
+    assert result["confusion_gold_to_stated"] == {"irreversible": {"irreversible": 1}, "reversible": {"irreversible": 1}}

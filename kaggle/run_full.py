@@ -20,6 +20,7 @@ from experiments.rq3_agent import MAX_TURNS
 
 STEPS = ("pilot", "disk", "extract", "rq2", "rq3", "zip")
 RQ2_LABEL_MODE, RQ2_HORIZON, RQ2_CONDITION, RQ2_SEED = "three-class", 3, "neutral", 17
+RQ2_PROMPT_VERSION = "rq2-stated-v2"
 RQ3_CONDITIONS = ("neutral", "explicit-carefulness")
 KAGGLE_WORKING = Path("/kaggle/working")
 
@@ -28,7 +29,7 @@ class Paths:
     def __init__(self, results_root, model):
         self.root = results_root / model_slug(model)
         self.extraction = self.root / "extraction"
-        self.rq2 = self.root / "rq2" / f"{RQ2_LABEL_MODE}-h{RQ2_HORIZON}-{RQ2_CONDITION}"
+        self.rq2 = self.root / "rq2" / f"{RQ2_LABEL_MODE}-h{RQ2_HORIZON}-{RQ2_CONDITION}-v2"
         self.rq3 = self.root / "rq3" / "h3"
         self.pilot = self.root / "pilot.json"
         self.log = self.root / "runner_log.jsonl"
@@ -86,7 +87,12 @@ def gpu_report():
 def rq2_done(paths, expected_ids):
     responses, _ = read_jsonl(paths.rq2 / "responses.jsonl")
     done = {str(row.get("id")) for row in responses}
-    return (paths.rq2 / "summary.json").exists() and expected_ids <= done
+    summary = paths.rq2 / "summary.json"
+    return (
+        summary.exists()
+        and json.loads(summary.read_text()).get("prompt_version") == RQ2_PROMPT_VERSION
+        and expected_ids <= done
+    )
 
 
 def rq3_done(paths, rq3_rows):
@@ -143,7 +149,7 @@ def main(argv=None):
     common = ["--model", args.model, "--input", str(input_path), "--device", args.device]
     print(f"model={args.model} results={paths.root} input rows={len(rows)}")
     print(gpu_report())
-    print(f"RQ2 {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
+    print(f"RQ2 {RQ2_PROMPT_VERSION} {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
     print(f"RQ3: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}")
     print(f"steps: {', '.join(steps)}")
     incomplete = []
@@ -187,7 +193,8 @@ def main(argv=None):
             run_module(paths, step, "experiments.rq2_stated", [
                 *common, "--limit", str(2 * rq2_pairs), "--label-mode", RQ2_LABEL_MODE,
                 "--horizon", str(RQ2_HORIZON), "--condition", RQ2_CONDITION,
-                "--seed", str(RQ2_SEED), "--output-dir", str(paths.rq2),
+                "--seed", str(RQ2_SEED), "--prompt-version", RQ2_PROMPT_VERSION,
+                "--output-dir", str(paths.rq2),
             ])
             if not rq2_done(paths, expected):
                 incomplete.append("rq2: not all rows answered")

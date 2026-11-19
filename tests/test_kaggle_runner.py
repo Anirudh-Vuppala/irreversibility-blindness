@@ -70,10 +70,13 @@ def test_pilot_projection_scales_timing_and_size(tmp_path):
 def test_rq2_and_rq3_done_checks_require_every_row(tmp_path):
     paths = run_full.Paths(tmp_path, "m")
     _write_jsonl(paths.rq2 / "responses.jsonl", [{"id": "a"}])
-    (paths.rq2 / "summary.json").write_text("{}")
+    (paths.rq2 / "summary.json").write_text('{"prompt_version": "rq2-stated-v2"}')
     assert not run_full.rq2_done(paths, {"a", "b"})
     _write_jsonl(paths.rq2 / "responses.jsonl", [{"id": "a"}, {"id": "b"}])
     assert run_full.rq2_done(paths, {"a", "b"})
+    (paths.rq2 / "summary.json").write_text('{"prompt_version": "rq2-stated-v1"}')
+    assert not run_full.rq2_done(paths, {"a", "b"})
+    assert paths.rq2.name == "three-class-h3-neutral-v2"
 
     _write_jsonl(paths.rq3 / "tasks.jsonl", [{"id": "x"}, {"id": "y"}])
     (paths.rq3 / "summary.json").write_text('{"max_turns": 8}')
@@ -94,7 +97,7 @@ def test_zip_contains_model_results_under_model_folder(tmp_path):
     target = run_full.zip_results(paths, tmp_path / "out")
     assert target.name == "Qwen_Qwen2.5-7B-Instruct_results.zip"
     assert zipfile.ZipFile(target).namelist() == [
-        "Qwen_Qwen2.5-7B-Instruct/rq2/three-class-h3-neutral/summary.json"
+        "Qwen_Qwen2.5-7B-Instruct/rq2/three-class-h3-neutral-v2/summary.json"
     ]
 
 
