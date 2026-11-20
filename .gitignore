@@ -24,3 +24,7 @@ checkpoints/
 
 # Local OS files
 .DS_Store
+
+# Secrets and local results
+.env
+results/
