@@ -40,3 +40,9 @@ Last vs mean token; minimal pairs only vs all rows; binary vs three-class; neutr
 
 ## Known data quirk
 10 `move_to_savings` rows with a 2% fee are labeled partially reversible with an empty restore sequence: they count as approximately restored after zero follow-up calls under the 3% money tolerance. They are kept as labeled.
+
+## Post-hoc, not in the original plan
+Added 2026-11-20 after all results above had been produced and seen. These analyses are exploratory, never replace or change an earlier number, and are written by `experiments/posthoc.py` to `results/analysis/<model>/posthoc_*.json`, each labelled "post-hoc, not in the original plan".
+- (a) Bag-of-words (binary 1–2-gram counts) and TF-IDF (1–2-gram, sublinear) logistic regression on the full extraction prompt text (task, state and candidate action), on the same three grouped splits, with C chosen by the same inner `GroupKFold`. Three-class and binary, all rows and minimal pairs only, reported next to the train-selected probe and the `action_text` baseline. The prompt text is identical for both models, so the numbers are too.
+- (b) Leave-one-tool-out probe (tool = the `verb` field), all rows, three-class and binary, at the position and layer chosen on training data in the main analysis (the modal choice over splits; if no (position, layer) is modal, the modal position and modal layer separately). C is chosen by inner `GroupKFold` on the training tools only. Accuracy per held-out tool and the mean over tools, with the training-majority baseline per tool; tools whose rows all share one label are flagged.
+- (c) RQ2 directional metric (prompt v2): stated labels scored reversible = 0, partially reversible = 1, irreversible = 2; per pair 1 if the irreversible version is stated higher, 0.5 on a tie, 0 if lower; mean over pairs where both answers parsed (0.5 = chance), 1,000-resample bootstrap CI over pairs, and the tied fraction. Reported on all RQ2 pairs and on the 30 RQ3 pairs.

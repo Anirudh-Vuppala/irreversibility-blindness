@@ -118,3 +118,21 @@ The required fields are `id, environment, state_text, action_text, label, horizo
 ## Kaggle run constraints
 
 On a Kaggle T4, load one model per session with float16 and `device_map="auto"`. Read the Hugging Face token from Kaggle Secrets. Save prompts and model outputs, append results incrementally, and support resuming an interrupted run. Keep all irreversible actions inside the simulated sandbox; never connect an agent to real email, files outside the sandbox, or real accounts. Do not use paid APIs for reported results.
+
+## Reproduce
+
+1. **Environment.** Python 3.11 in a venv with `pip install -r requirements.txt` (see Setup). Hugging Face access to `meta-llama/Llama-3.1-8B-Instruct` is needed for Llama.
+2. **Data.** `data/sandbox.jsonl` is committed. `python -m reversibility.generate --scenarios 265 --seed 0 --out results/sandbox-regenerated.jsonl` reproduces it byte for byte in about a second. See `docs/data_card.md`.
+3. **Kaggle extraction, RQ2 and RQ3** (GPU T4 x2, one model per session, `HF_TOKEN` in Kaggle Secrets). `kaggle/run_full.py` runs pilot, disk check, hidden-state extraction, RQ2 (prompt v2, three-class, h3, neutral) and RQ3 (60 rows, 15 turns, both prompt conditions), then zips `results/<model>/` to `/kaggle/working`. Each step resumes from its own logs.
+   ```bash
+   python kaggle/run_full.py --model Qwen/Qwen2.5-7B-Instruct
+   python kaggle/run_full.py --model meta-llama/Llama-3.1-8B-Instruct --only rq3   # one step, then re-zip
+   ```
+   Flags: `--model` (required), `--input`, `--results-root`, `--zip-dir`, `--hf-cache` (default `/tmp/hf_cache` on Kaggle), `--device {cpu,auto}` (default auto), `--pilot-rows 50`, `--rq2-pairs` (default all eligible pairs), `--rq3-rows 60`, and either `--stop-after STEP` or `--only STEP` (steps: pilot, disk, extract, rq2, rq3, zip). Rough times per model: extraction 12 min, RQ2 1.5–2 h, RQ3 30–50 min; about 1 GB of arrays per model.
+4. **Local analysis** (CPU only). Unzip each model's results under `results/`, then
+   ```bash
+   nohup scripts/run_probes.sh Qwen_Qwen2.5-7B-Instruct meta-llama_Llama-3.1-8B-Instruct >/dev/null 2>&1 &
+   python -m experiments.posthoc --model-dir results/Qwen_Qwen2.5-7B-Instruct   # post-hoc analyses
+   ```
+   `run_probes.sh` runs `experiments/analyze.py` (probes for every layer and position, then the RQ2/RQ3 recomputation, Gap and figures) and logs to `results/analysis/run_<model>.log`; it resumes finished probe files. `JOBS` and `EXTRA_ARGS` (for example `--layer-stride 2`) are passed through. On an Apple M2 with 8 GB and 4 workers it took 3.2 h for Qwen and 6.1 h for Llama; the post-hoc script took about 1 min for the text baselines and 8 min (Qwen) and 15 min (Llama) for leave-one-tool-out.
+5. **Outputs.** Per model under `results/analysis/<model>/`: `probes_summary.csv`, `probes/`, `rq2_summary.json`, `rq3_summary.json`, `headline.json`, `v1_vs_v2_rq2.json`, `posthoc_*.json` and `figures/`. `results/` is not committed; the analysis plan is `docs/analysis_plan.md` and the run history is `docs/experiment_log.md`.
