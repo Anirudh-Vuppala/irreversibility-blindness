@@ -87,6 +87,18 @@ def make_messages(row):
     task_text = row.get("task_text", "")
     state_text = row.get("state_text", "")
     action_text = row.get("action_text", "")
+    if row.get("environment") == "scienceworld":
+        return [
+            {
+                "role": "system",
+                "content": "Represent the candidate command in a text-based science-lab simulator. Do not add commentary.",
+            },
+            {
+                "role": "user",
+                "content": f"Task:\n{task_text}\n\nCurrent observation:\n{state_text}\n\nConsider the candidate command below.",
+            },
+            {"role": "assistant", "content": str(action_text)},
+        ]
     return [
         {
             "role": "system",
@@ -190,6 +202,7 @@ def extract_one(model, tokenizer, row, output_dir, max_tokens, prompt_callback=N
         "horizon": row.get("horizon"),
         "scenario_id": row.get("scenario_id"),
         "group_id": row.get("group_id"),
+        "pair_id": row.get("pair_id"),
         "variant": row.get("variant"),
         "is_minimal_pair": row.get("is_minimal_pair", False),
         "action_text": row["action_text"],

@@ -268,10 +268,10 @@ def probe_file(out_dir, subset, target, position, layer):
     return out_dir / "probes" / f"{subset}__{target}__{position}__L{layer:02d}.json"
 
 
-def run_job(model_dir, out_dir, rows, fingerprint, position, layer):
+def run_job(model_dir, out_dir, rows, fingerprint, position, layer, group_key="scenario_id", subsets=SUBSETS):
     from threadpoolctl import threadpool_limits
 
-    paths = {(s, t): probe_file(out_dir, s, t, position, layer) for s in SUBSETS for t in TARGETS}
+    paths = {(s, t): probe_file(out_dir, s, t, position, layer) for s in subsets for t in TARGETS}
     if all(p.exists() for p in paths.values()):
         return False
     with threadpool_limits(limits=int(os.environ.get("ANALYZE_THREADS", "2"))):
@@ -280,7 +280,7 @@ def run_job(model_dir, out_dir, rows, fingerprint, position, layer):
             if path.exists():
                 continue
             keep, labels = setting_rows(rows, subset, target)
-            groups = np.array([rows[i]["scenario_id"] for i in keep])
+            groups = np.array([rows[i][group_key] for i in keep])
             ids = [rows[i]["id"] for i in keep]
             texts = np.array([rows[i]["action_text"] for i in keep])
             splits = make_splits(groups)
@@ -293,7 +293,7 @@ def run_job(model_dir, out_dir, rows, fingerprint, position, layer):
     return True
 
 
-def run_probes(model_dir, out_dir, rows, layers, jobs):
+def run_probes(model_dir, out_dir, rows, layers, jobs, group_key="scenario_id", subsets=SUBSETS):
     from joblib import Parallel, delayed
 
     fingerprint = hashlib.sha256(
@@ -302,12 +302,12 @@ def run_probes(model_dir, out_dir, rows, layers, jobs):
     for path in (out_dir / "probes").glob("*.json"):
         if json.loads(path.read_text()).get("fingerprint") != fingerprint:
             raise SystemExit(f"{path} was produced with different rows or settings; use a new --out-dir")
-    for subset in SUBSETS:
+    for subset in subsets:
         for target in TARGETS:
             path = out_dir / "probes" / f"{subset}__{target}__baselines.json"
             if not path.exists():
                 keep, labels = setting_rows(rows, subset, target)
-                groups = np.array([rows[i]["scenario_id"] for i in keep])
+                groups = np.array([rows[i][group_key] for i in keep])
                 texts = np.array([rows[i]["action_text"] for i in keep])
                 write_json(path, {"fingerprint": fingerprint, "subset": subset, "target": target,
                                   "splits": baselines(labels, groups, texts, target, make_splits(groups))})
@@ -315,7 +315,7 @@ def run_probes(model_dir, out_dir, rows, layers, jobs):
     log(f"probes: {len(work)} (position, layer) jobs, {jobs} workers, {len(rows)} rows")
     started, finished = time.perf_counter(), 0
     runner = Parallel(n_jobs=jobs, return_as="generator_unordered")
-    for ran in runner(delayed(run_job)(model_dir, out_dir, rows, fingerprint, p, l) for p, l in work):
+    for ran in runner(delayed(run_job)(model_dir, out_dir, rows, fingerprint, p, l, group_key, subsets) for p, l in work):
         finished += 1
         elapsed = time.perf_counter() - started
         log(f"probes: {finished}/{len(work)} jobs ({'ran' if ran else 'skipped'}), "
@@ -334,9 +334,9 @@ def _summary_row(base, per_split_scores, per_split_preds, target, resamples):
     return row
 
 
-def summarize_probes(out_dir, layers, resamples):
+def summarize_probes(out_dir, layers, resamples, subsets=SUBSETS):
     rows, selected = [], {}
-    for subset in SUBSETS:
+    for subset in subsets:
         for target in TARGETS:
             base_file = json.loads((out_dir / "probes" / f"{subset}__{target}__baselines.json").read_text())
             for control in ("majority", "lexical_bow"):
@@ -456,15 +456,15 @@ def group_bootstrap_auroc(per_split, target, resamples=1000, seed=SEED):
             dropped += 1
         else:
             draws.append(float(np.mean(values)))
-    return _ci(draws), dropped
+    return (_ci(draws) if draws else None), dropped
 
 
-def auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples):
+def auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples, group_key="scenario_id"):
     loaded = load_probe_files(out_dir, subset, target, layers)
     choice = select_per_split(loaded)
     base = json.loads((out_dir / "probes" / f"{subset}__{target}__baselines.json").read_text())["splits"]
     keep, labels = setting_rows(rows, subset, target)
-    groups = np.array([rows[i]["scenario_id"] for i in keep])
+    groups = np.array([rows[i][group_key] for i in keep])
     ids = [rows[i]["id"] for i in keep]
     texts = np.array([rows[i]["action_text"] for i in keep])
     control_labels = control_task_labels(texts, target)
@@ -494,8 +494,10 @@ def auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples):
     result = {}
     for name in AUROC_CONTROLS:
         values = [auroc(g, sc, target) for g, sc, _ in per_split[name]]
+        defined = [v for v in values if v is not None]
         ci, dropped = group_bootstrap_auroc(per_split[name], target, resamples)
-        result[name] = {"per_split": values, "mean": float(np.mean(values)), "std": float(np.std(values, ddof=1)),
+        result[name] = {"per_split": values, "mean": float(np.mean(defined)) if defined else None,
+                        "std": float(np.std(defined, ddof=1)) if len(defined) > 1 else None,
                         "ci95": ci, "bootstrap_resamples_dropped": dropped,
                         "refit_prediction_agreement_with_saved": agreement[name]}
     return {
@@ -508,17 +510,17 @@ def auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples):
     }
 
 
-def run_auroc(model_dir, out_dir, rows, layers, resamples):
+def run_auroc(model_dir, out_dir, rows, layers, resamples, group_key="scenario_id", subsets=SUBSETS):
     from threadpoolctl import threadpool_limits
 
     with threadpool_limits(limits=int(os.environ.get("ANALYZE_THREADS", "2"))):
-        for subset in SUBSETS:
+        for subset in subsets:
             for target in TARGETS:
                 path = auroc_file(out_dir, subset, target)
                 if not path.exists():
-                    write_json(path, auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples))
+                    write_json(path, auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples, group_key))
                 stats = json.loads(path.read_text())["auroc"]
-                log(f"auroc {subset}/{target}: " + ", ".join(f"{k} {v['mean']:.3f}" for k, v in stats.items()))
+                log(f"auroc {subset}/{target}: " + ", ".join(f"{k} {v['mean']}" for k, v in stats.items()))
 
 
 def probe_votes(out_dir, choice, target="three-class", subset="all"):
@@ -792,7 +794,7 @@ def plot_layers(out_dir, summary_rows, selected, model_name):
             ax.axhline(value, color=INK_2, linestyle=style, linewidth=1.2, label=LABELS[control])
         selected_row = next(r for r in summary_rows if r["subset"] == "all" and r["target"] == target
                             and r["control"] == "probe" and str(r["layer"]).startswith("train_selected"))
-        auroc_note = f"; AUROC at train-selected layer {selected_row['auroc_mean']:.3f}" if "auroc_mean" in selected_row else ""
+        auroc_note = f"; AUROC at train-selected layer {selected_row['auroc_mean']:.3f}" if selected_row.get("auroc_mean") is not None else ""
         ax.set_title(f"{target}, all rows, {position} token{auroc_note}", fontsize=10, color=INK, loc="left")
         ax.set_xlabel("Layer (0 = embeddings)", fontsize=9, color=INK_2)
         ax.set_ylabel("Test accuracy (mean of 3 splits)", fontsize=9, color=INK_2)

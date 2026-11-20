@@ -15,10 +15,12 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from experiments.extract_hidden import completed_ids, model_slug
 from experiments.model_runtime import append_jsonl, read_jsonl
-from experiments.rq2_stated import candidate_pairs, select_stated_pairs
+from experiments.rq2_stated import SW_PROMPT_VERSION, candidate_pairs, select_stated_pairs
 from experiments.rq3_agent import MAX_TURNS
 
 STEPS = ("pilot", "disk", "extract", "rq2", "rq3", "zip")
+SW_STEPS = ("extract", "rq2", "zip")
+INPUTS = {"sandbox": "data/sandbox.jsonl", "scienceworld": "data/scienceworld.jsonl"}
 RQ2_LABEL_MODE, RQ2_HORIZON, RQ2_CONDITION, RQ2_SEED = "three-class", 3, "neutral", 17
 RQ2_PROMPT_VERSION = "rq2-stated-v2"
 RQ3_CONDITIONS = ("neutral", "explicit-carefulness")
@@ -26,8 +28,11 @@ KAGGLE_WORKING = Path("/kaggle/working")
 
 
 class Paths:
-    def __init__(self, results_root, model, rq3_batch="main"):
-        self.root = results_root / model_slug(model)
+    def __init__(self, results_root, model, rq3_batch="main", env="sandbox"):
+        self.results_root = results_root
+        self.root = results_root / model_slug(model) / ("sw" if env == "scienceworld" else "")
+        self.zip_name = f"{model_slug(model)}{'_sw' if env == 'scienceworld' else ''}_results.zip"
+        self.rq2_prompt_version = SW_PROMPT_VERSION if env == "scienceworld" else RQ2_PROMPT_VERSION
         self.extraction = self.root / "extraction"
         self.rq2 = self.root / "rq2" / f"{RQ2_LABEL_MODE}-h{RQ2_HORIZON}-{RQ2_CONDITION}-v2"
         self.rq3 = self.root / "rq3" / ("h3" if rq3_batch == "main" else "h3-extra")
@@ -90,7 +95,7 @@ def rq2_done(paths, expected_ids):
     summary = paths.rq2 / "summary.json"
     return (
         summary.exists()
-        and json.loads(summary.read_text()).get("prompt_version") == RQ2_PROMPT_VERSION
+        and json.loads(summary.read_text()).get("prompt_version") == paths.rq2_prompt_version
         and expected_ids <= done
     )
 
@@ -107,12 +112,12 @@ def rq3_done(paths, rq3_rows):
 
 def zip_results(paths, zip_dir):
     zip_dir.mkdir(parents=True, exist_ok=True)
-    target = zip_dir / f"{paths.root.name}_results.zip"
+    target = zip_dir / paths.zip_name
     temporary = target.with_suffix(".zip.tmp")
     with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(paths.root.rglob("*")):
             if path.is_file():
-                archive.write(path, path.relative_to(paths.root.parent))
+                archive.write(path, path.relative_to(paths.results_root))
     temporary.replace(target)
     return target
 
@@ -120,7 +125,9 @@ def zip_results(paths, zip_dir):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", required=True)
-    parser.add_argument("--input", default="data/sandbox.jsonl")
+    parser.add_argument("--env", choices=tuple(INPUTS), default="sandbox",
+                        help="scienceworld: extraction and RQ2 only, under results/<model>/sw, zipped separately")
+    parser.add_argument("--input", help="default: data/sandbox.jsonl or data/scienceworld.jsonl by --env")
     parser.add_argument("--results-root", default=str(REPO_ROOT / "results"))
     parser.add_argument("--zip-dir", default=str(KAGGLE_WORKING if KAGGLE_WORKING.exists() else REPO_ROOT))
     parser.add_argument("--hf-cache", default="/tmp/hf_cache" if KAGGLE_WORKING.exists() else None)
@@ -135,12 +142,17 @@ def main(argv=None):
     order.add_argument("--only", choices=STEPS, help="run one step (resuming it), then re-zip")
     args = parser.parse_args(argv)
     steps = tuple(dict.fromkeys((args.only, "zip"))) if args.only else STEPS[:STEPS.index(args.stop_after) + 1]
+    if args.env == "scienceworld":
+        if args.only and args.only not in SW_STEPS:
+            parser.error(f"--env scienceworld runs only {', '.join(SW_STEPS)} (no ScienceWorld agent runs)")
+        steps = tuple(step for step in steps if step in SW_STEPS)
 
     os.environ["PYTHONUNBUFFERED"] = "1"
     if args.hf_cache:
         os.environ["IRREV_HF_CACHE"] = args.hf_cache
-    input_path = Path(args.input) if Path(args.input).is_absolute() else REPO_ROOT / args.input
-    paths = Paths(Path(args.results_root).resolve(), args.model, args.rq3_batch)
+    input_arg = args.input or INPUTS[args.env]
+    input_path = Path(input_arg) if Path(input_arg).is_absolute() else REPO_ROOT / input_arg
+    paths = Paths(Path(args.results_root).resolve(), args.model, args.rq3_batch, args.env)
     paths.root.mkdir(parents=True, exist_ok=True)
     rows, errors = read_jsonl(input_path)
     if errors:
@@ -151,8 +163,9 @@ def main(argv=None):
     common = ["--model", args.model, "--input", str(input_path), "--device", args.device]
     print(f"model={args.model} results={paths.root} input rows={len(rows)}")
     print(gpu_report())
-    print(f"RQ2 {RQ2_PROMPT_VERSION} {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
-    print(f"RQ3 {args.rq3_batch} batch: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}, output {paths.rq3}")
+    print(f"env={args.env} RQ2 {paths.rq2_prompt_version} {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
+    if args.env == "sandbox":
+        print(f"RQ3 {args.rq3_batch} batch: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}, output {paths.rq3}")
     print(f"steps: {', '.join(steps)}")
     incomplete = []
 
@@ -188,6 +201,9 @@ def main(argv=None):
             if missing:
                 incomplete.append(f"extract: {missing} rows missing (see failures.jsonl; rerun retries them)")
         elif step == "rq2":
+            if not rq2_pairs:
+                incomplete.append(f"rq2: no eligible reversible/irreversible pairs in {input_path}")
+                continue
             expected = {str(r["id"]) for r in select_stated_pairs(rows, 2 * rq2_pairs, RQ2_HORIZON, RQ2_LABEL_MODE, RQ2_SEED)}
             if rq2_done(paths, expected):
                 print("\n=== rq2: done")
