@@ -122,3 +122,18 @@ def test_stop_after_and_only_accept_every_step_and_exclude_each_other():
         assert step in ("pilot", "disk", "extract", "rq2", "rq3", "zip")
     with pytest.raises(SystemExit):
         run_full.main(["--model", "m", "--only", "rq3", "--stop-after", "rq2"])
+
+
+def test_rq3_extra_batch_writes_to_its_own_folder(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(run_full, "run_module", lambda paths, step, module, args: calls.append((paths.rq3, args)) or 0)
+    monkeypatch.setattr(run_full, "rq3_done", lambda paths, rows: bool(calls))
+    _write_jsonl(tmp_path / "in.jsonl", [{"id": "a", "labels_by_horizon": {"3": "reversible"}}])
+    run_full.main([
+        "--model", "m", "--input", str(tmp_path / "in.jsonl"), "--results-root", str(tmp_path / "r"),
+        "--zip-dir", str(tmp_path / "z"), "--only", "rq3", "--rq3-batch", "extra",
+    ])
+    (folder, args), = calls
+    assert folder == (tmp_path / "r" / "m" / "rq3" / "h3-extra").resolve()
+    assert args[args.index("--batch") + 1] == "extra" and args[args.index("--output-dir") + 1] == str(folder)
+    assert args[args.index("--limit") + 1] == "60"

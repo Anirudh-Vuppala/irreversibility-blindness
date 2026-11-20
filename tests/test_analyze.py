@@ -88,3 +88,20 @@ def test_rederived_flags_and_posthoc_ask_attempts():
     assert ask_attempt_before_target(target, calls, unparsed_ask)
     failed_ask = calls + [{"turn": 1, "ok": False, "tool_call": {"tool": "ask_user", "args": {}}}]
     assert ask_attempt_before_target(target, failed_ask, [])
+
+
+def test_auroc_binary_three_class_and_constant_scores():
+    from experiments.analyze import auroc, class_scores, group_bootstrap_auroc
+
+    scores = np.array([[0.9, 0.1], [0.2, 0.8], [0.6, 0.4], [0.3, 0.7]])
+    assert auroc([0, 1, 0, 1], scores, "binary") == 1.0
+    constant = class_scores((None, 0), np.zeros((4, 3)), "three-class")
+    assert auroc([0, 1, 2, 1], constant, "three-class") == 0.5
+    assert auroc([0, 0, 1, 1], constant, "three-class") is None
+    ci, dropped = group_bootstrap_auroc([([0, 1, 0, 1], scores, ["a", "b", "c", "d"])], "binary", resamples=50)
+    assert dropped > 0 and ci == [1.0, 1.0]
+
+
+def test_group_bootstrap_ci_reports_balanced_accuracy():
+    out = group_bootstrap_ci([([0, 1, 1, 0], [0, 1, 0, 0], ["a", "a", "b", "b"])], "binary", resamples=20)
+    assert set(out) == {"accuracy_ci95", "macro_f1_ci95", "balanced_accuracy_ci95"}

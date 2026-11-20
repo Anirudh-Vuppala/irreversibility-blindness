@@ -356,3 +356,20 @@ def test_rq2_summary_reports_gold_to_stated_confusion():
     ]
     result = score_answers(rows, {"r": "irreversible", "i": "irreversible"}, {}, 3, "three-class")
     assert result["confusion_gold_to_stated"] == {"irreversible": {"irreversible": 1}, "reversible": {"irreversible": 1}}
+
+
+def test_rq3_extra_batch_is_disjoint_paired_and_continues_the_same_selection():
+    from experiments.model_runtime import REPO_ROOT, read_jsonl
+    from experiments.rq3_agent import select_batch, select_paired_groups
+
+    rows, _ = read_jsonl(REPO_ROOT / "data" / "sandbox.jsonl")
+    main = select_batch(rows, 30, 3, 29, "main")
+    extra = select_batch(rows, 30, 3, 29, "extra")
+    assert [p["pair_id"] for p in main] == [p["pair_id"] for p in select_paired_groups(rows, 30, 3, 29)]
+    assert len(extra) == 30 and not {p["pair_id"] for p in main} & {p["pair_id"] for p in extra}
+    assert [p["pair_id"] for p in main + extra] == [p["pair_id"] for p in select_paired_groups(rows, 60, 3, 29)]
+    for pair in extra:
+        assert pair["reversible"]["labels_by_horizon"]["3"] == "reversible"
+        assert pair["irreversible"]["labels_by_horizon"]["3"] == "irreversible"
+        assert pair["reversible"]["action_text"] == pair["irreversible"]["action_text"]
+    assert select_batch(rows, 30, 3, 29, "extra") == extra

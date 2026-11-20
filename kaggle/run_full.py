@@ -26,11 +26,11 @@ KAGGLE_WORKING = Path("/kaggle/working")
 
 
 class Paths:
-    def __init__(self, results_root, model):
+    def __init__(self, results_root, model, rq3_batch="main"):
         self.root = results_root / model_slug(model)
         self.extraction = self.root / "extraction"
         self.rq2 = self.root / "rq2" / f"{RQ2_LABEL_MODE}-h{RQ2_HORIZON}-{RQ2_CONDITION}-v2"
-        self.rq3 = self.root / "rq3" / "h3"
+        self.rq3 = self.root / "rq3" / ("h3" if rq3_batch == "main" else "h3-extra")
         self.pilot = self.root / "pilot.json"
         self.log = self.root / "runner_log.jsonl"
 
@@ -128,6 +128,8 @@ def main(argv=None):
     parser.add_argument("--pilot-rows", type=int, default=50)
     parser.add_argument("--rq2-pairs", type=int, help="default: every eligible minimal pair")
     parser.add_argument("--rq3-rows", type=int, default=60)
+    parser.add_argument("--rq3-batch", choices=("main", "extra"), default="main",
+                        help="extra: the next --rq3-rows/2 pairs of the same selection, written to rq3/h3-extra")
     order = parser.add_mutually_exclusive_group()
     order.add_argument("--stop-after", choices=STEPS, default="zip")
     order.add_argument("--only", choices=STEPS, help="run one step (resuming it), then re-zip")
@@ -138,7 +140,7 @@ def main(argv=None):
     if args.hf_cache:
         os.environ["IRREV_HF_CACHE"] = args.hf_cache
     input_path = Path(args.input) if Path(args.input).is_absolute() else REPO_ROOT / args.input
-    paths = Paths(Path(args.results_root).resolve(), args.model)
+    paths = Paths(Path(args.results_root).resolve(), args.model, args.rq3_batch)
     paths.root.mkdir(parents=True, exist_ok=True)
     rows, errors = read_jsonl(input_path)
     if errors:
@@ -150,7 +152,7 @@ def main(argv=None):
     print(f"model={args.model} results={paths.root} input rows={len(rows)}")
     print(gpu_report())
     print(f"RQ2 {RQ2_PROMPT_VERSION} {RQ2_LABEL_MODE} h{RQ2_HORIZON} {RQ2_CONDITION}: {rq2_pairs} of {available_pairs} eligible pairs ({2 * rq2_pairs} rows)")
-    print(f"RQ3: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}")
+    print(f"RQ3 {args.rq3_batch} batch: {args.rq3_rows} rows, conditions {', '.join(RQ3_CONDITIONS)}, output {paths.rq3}")
     print(f"steps: {', '.join(steps)}")
     incomplete = []
 
@@ -204,7 +206,7 @@ def main(argv=None):
                 continue
             run_module(paths, step, "experiments.rq3_agent", [
                 *common, "--limit", str(args.rq3_rows), "--condition", "both",
-                "--horizon", "3", "--output-dir", str(paths.rq3),
+                "--horizon", "3", "--batch", args.rq3_batch, "--output-dir", str(paths.rq3),
             ])
             if not rq3_done(paths, args.rq3_rows):
                 incomplete.append("rq3: not all task/condition runs finished")

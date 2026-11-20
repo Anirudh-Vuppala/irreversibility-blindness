@@ -78,6 +78,18 @@ def select_paired_groups(rows, pair_count, horizon=HORIZON, seed=17):
     return selected
 
 
+def select_batch(rows, pair_count, horizon=HORIZON, seed=17, batch="main"):
+    """Main batch: the first pair_count pairs of the selection. Extra batch: the next pair_count pairs of the same
+    round-robin selection, so it is disjoint from the main batch and keeps its verb balance."""
+    if batch == "main":
+        return select_paired_groups(rows, pair_count, horizon, seed)
+    selected = select_paired_groups(rows, 2 * pair_count, horizon, seed)
+    main, extra = selected[:pair_count], selected[pair_count:]
+    if {p["pair_id"] for p in main} & {p["pair_id"] for p in extra}:
+        raise ValueError("extra batch overlaps the main batch")
+    return extra
+
+
 def agent_system(condition):
     base = (
         "You are an agent operating only in the simulated workspace described by the user. "
@@ -253,6 +265,8 @@ def main(argv=None):
     parser.add_argument("--device", choices=("cpu", "auto"), default="cpu")
     parser.add_argument("--max-turns", type=int, default=MAX_TURNS)
     parser.add_argument("--max-new-tokens", type=int, default=160)
+    parser.add_argument("--batch", choices=("main", "extra"), default="main",
+                        help="extra: the next --limit/2 pairs of the same selection, disjoint from the main batch")
     args = parser.parse_args(argv)
     if args.limit < 2 or args.limit % 2 or args.threads < 1 or args.max_turns < 1:
         parser.error("limit must be even and at least 2; threads and max-turns must be positive")
@@ -260,7 +274,7 @@ def main(argv=None):
         parser.error("RQ3 paired behavior uses the planned horizon 3")
 
     output_dir = Path(args.output_dir) if args.output_dir else (
-        REPO_ROOT / "results" / "rq3" / model_slug(args.model) / "h3"
+        REPO_ROOT / "results" / "rq3" / model_slug(args.model) / ("h3" if args.batch == "main" else "h3-extra")
     )
     if not output_dir.is_absolute():
         output_dir = REPO_ROOT / output_dir
@@ -284,7 +298,7 @@ def main(argv=None):
             for error in errors:
                 append_jsonl(failures_path, {"stage": "input-parse", **error})
             raise SystemExit(f"Input contains {len(errors)} malformed rows; see failures.jsonl")
-        pairs = select_paired_groups(input_rows, args.limit // 2, args.horizon, args.seed)
+        pairs = select_batch(input_rows, args.limit // 2, args.horizon, args.seed, args.batch)
         task_rows = []
         for pair in pairs:
             for label in ("reversible", "irreversible"):
@@ -378,7 +392,7 @@ def main(argv=None):
         for condition in conditions
     }
     summary = {
-        "model": args.model, "prompt_version": PROMPT_VERSION,
+        "model": args.model, "prompt_version": PROMPT_VERSION, "batch": args.batch, "seed": args.seed,
         "prompt_conditions": list(conditions), "horizon": args.horizon, "max_turns": args.max_turns,
         "task_rows": len(task_rows), "paired_groups": len(task_rows) // 2,
         "summaries": summaries, "elapsed_seconds": time.perf_counter() - started,

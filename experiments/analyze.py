@@ -18,7 +18,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import cohen_kappa_score
+from sklearn.metrics import cohen_kappa_score, roc_auc_score
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -129,14 +129,14 @@ def group_bootstrap_ci(per_split, target, resamples=1000, seed=SEED):
         for index, group in enumerate(groups):
             members[group].append(index)
         prepared.append((gold, pred, [np.array(v) for v in members.values()]))
-    draws = {"accuracy": [], "macro_f1": []}
+    draws = {"accuracy": [], "macro_f1": [], "balanced_accuracy": []}
     for _ in range(resamples):
         values = defaultdict(list)
         for gold, pred, blocks in prepared:
             picked = np.concatenate([blocks[j] for j in rng.integers(0, len(blocks), len(blocks))])
             m = metrics(gold[picked], pred[picked], target)
-            values["accuracy"].append(m["accuracy"])
-            values["macro_f1"].append(m["macro_f1"])
+            for key in draws:
+                values[key].append(m[key])
         for key in draws:
             draws[key].append(float(np.mean(values[key])))
     return {f"{key}_ci95": [float(x) for x in np.quantile(vals, [0.025, 0.975])] for key, vals in draws.items()}
@@ -244,11 +244,12 @@ def probe_layer(x, labels, groups, ids, texts, target, splits, seed=SEED):
     return result
 
 
-def baselines(labels, groups, texts, target, splits):
-    def bow(train_texts, val_texts):
-        vectorizer = CountVectorizer(ngram_range=(1, 2), binary=True)
-        return vectorizer.fit_transform(train_texts), vectorizer.transform(val_texts)
+def bow(train_texts, val_texts):
+    vectorizer = CountVectorizer(ngram_range=(1, 2), binary=True)
+    return vectorizer.fit_transform(train_texts), vectorizer.transform(val_texts)
 
+
+def baselines(labels, groups, texts, target, splits):
     result = []
     for number, (train, test) in enumerate(splits, start=1):
         majority = int(np.bincount(labels[train]).argmax())
@@ -365,11 +366,7 @@ def summarize_probes(out_dir, layers, resamples):
                             sel = [s["selectivity"] for s in data["splits"]]
                             row["selectivity_mean"], row["selectivity_std"] = float(np.mean(sel)), float(np.std(sel, ddof=1))
                         rows.append(row)
-            # Train-only selection of position and layer, per split.
-            choice = []
-            for split_index in range(3):
-                key = max(loaded, key=lambda k: (loaded[k]["splits"][split_index]["inner_cv_macro_f1"], -k[1]))
-                choice.append(key)
+            choice = select_per_split(loaded)
             selected[(subset, target)] = choice
             for control in CONTROLS:
                 gold_key = "control_gold" if control == "control_task" else "gold"
@@ -386,12 +383,142 @@ def summarize_probes(out_dir, layers, resamples):
                     sel = [s["selectivity"] for s in per_split]
                     row["selectivity_mean"], row["selectivity_std"] = float(np.mean(sel)), float(np.std(sel, ddof=1))
                 rows.append(row)
+            auroc_path = auroc_file(out_dir, subset, target)
+            if auroc_path.exists():
+                auroc = json.loads(auroc_path.read_text())["auroc"]
+                for row in rows:
+                    if (row["subset"], row["target"]) == (subset, target) and row["control"] in auroc and \
+                            (row["layer"] == "n/a" or str(row["layer"]).startswith("train_selected")):
+                        stats = auroc[row["control"]]
+                        row.update(auroc_mean=stats["mean"], auroc_std=stats["std"], auroc_ci95=json.dumps(stats["ci95"]))
     fields = sorted({k for r in rows for k in r}, key=lambda k: (k not in ("subset", "target", "position", "layer", "control"), k))
     with (out_dir / "probes_summary.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
     return rows, selected
+
+
+def select_per_split(loaded):
+    """Train-only choice of (position, layer) per split: best inner-CV macro-F1, ties to the earlier layer."""
+    return [max(loaded, key=lambda k: (loaded[k]["splits"][i]["inner_cv_macro_f1"], -k[1])) for i in range(3)]
+
+
+def load_probe_files(out_dir, subset, target, layers):
+    return {(p, l): json.loads(probe_file(out_dir, subset, target, p, l).read_text()) for p in POSITIONS for l in layers}
+
+
+# ---------- AUROC (added after the first results; refits only the selected layer and the controls) ----------
+
+AUROC_CONTROLS = ("probe", "shuffled_label", "control_task", "lexical_bow", "majority")
+
+
+def auroc_file(out_dir, subset, target):
+    return out_dir / "probes" / f"{subset}__{target}__auroc.json"
+
+
+def class_scores(fitted, x, target):
+    """Class probabilities in class-id order; a constant model gives a one-hot (all-tied) score."""
+    model, constant = fitted
+    scores = np.zeros((x.shape[0], len(class_ids(target))))
+    if model is None:
+        scores[:, constant] = 1.0
+    else:
+        scores[:, model.classes_] = model.predict_proba(x)
+    return scores
+
+
+def auroc(gold, scores, target):
+    gold = np.asarray(gold)
+    if len(np.unique(gold)) < len(class_ids(target)):
+        return None
+    if target == "binary":
+        return float(roc_auc_score(gold, scores[:, 1]))
+    return float(roc_auc_score(gold, scores, multi_class="ovr", average="macro", labels=class_ids(target)))
+
+
+def group_bootstrap_auroc(per_split, target, resamples=1000, seed=SEED):
+    """As group_bootstrap_ci, for AUROC; resamples missing a class are dropped and counted."""
+    rng = np.random.default_rng(seed)
+    prepared = []
+    for gold, scores, groups in per_split:
+        members = defaultdict(list)
+        for index, group in enumerate(groups):
+            members[group].append(index)
+        prepared.append((np.asarray(gold), np.asarray(scores), [np.array(v) for v in members.values()]))
+    draws, dropped = [], 0
+    for _ in range(resamples):
+        values = []
+        for gold, scores, blocks in prepared:
+            picked = np.concatenate([blocks[j] for j in rng.integers(0, len(blocks), len(blocks))])
+            values.append(auroc(gold[picked], scores[picked], target))
+        if None in values:
+            dropped += 1
+        else:
+            draws.append(float(np.mean(values)))
+    return _ci(draws), dropped
+
+
+def auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples):
+    loaded = load_probe_files(out_dir, subset, target, layers)
+    choice = select_per_split(loaded)
+    base = json.loads((out_dir / "probes" / f"{subset}__{target}__baselines.json").read_text())["splits"]
+    keep, labels = setting_rows(rows, subset, target)
+    groups = np.array([rows[i]["scenario_id"] for i in keep])
+    ids = [rows[i]["id"] for i in keep]
+    texts = np.array([rows[i]["action_text"] for i in keep])
+    control_labels = control_task_labels(texts, target)
+    features, per_split, agreement = {}, defaultdict(list), defaultdict(list)
+    for index, (train, test) in enumerate(make_splits(groups)):
+        saved = loaded[choice[index]]["splits"][index]
+        if saved["test_ids"] != [ids[i] for i in test]:
+            raise SystemExit(f"{subset}/{target} split {index + 1}: test rows differ from the saved probe file")
+        if choice[index] not in features:
+            features[choice[index]] = load_layer(model_dir, [rows[i] for i in keep], choice[index][1], choice[index][0])
+        x = features[choice[index]]
+        x_train_text, x_test_text = bow(texts[train], texts[test])
+        fits = {
+            "probe": (_fit(x[train], labels[train], saved["C"]), x[test], labels[test], saved["predictions"]["probe"]),
+            "shuffled_label": (_fit(x[train], np.random.default_rng(SEED + index + 1).permutation(labels[train]), saved["C"]),
+                               x[test], labels[test], saved["predictions"]["shuffled_label"]),
+            "control_task": (_fit(x[train], control_labels[train], saved["C"]), x[test], control_labels[test],
+                             saved["predictions"]["control_task"]),
+            "lexical_bow": (_fit(x_train_text, labels[train], base[index]["lexical_C"], scale=False), x_test_text,
+                            labels[test], base[index]["predictions"]["lexical_bow"]),
+            "majority": ((None, int(np.bincount(labels[train]).argmax())), x[test], labels[test],
+                         base[index]["predictions"]["majority"]),
+        }
+        for name, (fitted, x_test, gold, saved_pred) in fits.items():
+            agreement[name].append(float(np.mean(_predict(fitted, x_test) == np.asarray(saved_pred))))
+            per_split[name].append((gold, class_scores(fitted, x_test, target), groups[test]))
+    result = {}
+    for name in AUROC_CONTROLS:
+        values = [auroc(g, sc, target) for g, sc, _ in per_split[name]]
+        ci, dropped = group_bootstrap_auroc(per_split[name], target, resamples)
+        result[name] = {"per_split": values, "mean": float(np.mean(values)), "std": float(np.std(values, ddof=1)),
+                        "ci95": ci, "bootstrap_resamples_dropped": dropped,
+                        "refit_prediction_agreement_with_saved": agreement[name]}
+    return {
+        "subset": subset, "target": target, "train_selected_position_layer_per_split": choice,
+        "note": "AUROC added after the first results because the brief requires it. Probabilities were not saved, "
+                "so only the train-selected layer/position per split and the controls are refit, with the saved C "
+                "and the same training rows; binary = reversible vs irreversible, three-class = macro one-vs-rest. "
+                "The control task is scored against its own labels.",
+        "auroc": result,
+    }
+
+
+def run_auroc(model_dir, out_dir, rows, layers, resamples):
+    from threadpoolctl import threadpool_limits
+
+    with threadpool_limits(limits=int(os.environ.get("ANALYZE_THREADS", "2"))):
+        for subset in SUBSETS:
+            for target in TARGETS:
+                path = auroc_file(out_dir, subset, target)
+                if not path.exists():
+                    write_json(path, auroc_setting(model_dir, out_dir, rows, layers, subset, target, resamples))
+                stats = json.loads(path.read_text())["auroc"]
+                log(f"auroc {subset}/{target}: " + ", ".join(f"{k} {v['mean']:.3f}" for k, v in stats.items()))
 
 
 def probe_votes(out_dir, choice, target="three-class", subset="all"):
@@ -498,8 +625,8 @@ def ask_attempt_before_target(target, calls, turns):
     return any(turn < target_turn for turn in attempts)
 
 
-def rq3_analysis(model_dir):
-    directory = model_dir / "rq3" / "h3"
+def rq3_analysis(model_dir, subdir="h3"):
+    directory = model_dir / "rq3" / subdir
     summary = json.loads((directory / "summary.json").read_text())
     tasks, _ = read_jsonl(directory / "tasks.jsonl")
     responses, _ = read_jsonl(directory / "responses.jsonl")
@@ -650,23 +777,28 @@ def plot_layers(out_dir, summary_rows, selected, model_name):
         position = Counter(c[0] for c in selected[("all", target)]).most_common(1)[0][0]
         for control in CONTROLS:
             pts = sorted(
-                (int(r["layer"]), r["accuracy_mean"], r["accuracy_std"]) for r in summary_rows
+                (int(r["layer"]), r["accuracy_mean"], r["accuracy_std"], r["balanced_accuracy_mean"]) for r in summary_rows
                 if r["subset"] == "all" and r["target"] == target and r["position"] == position
                 and r["control"] == control and str(r["layer"]).isdigit()
             )
-            layers, means, stds = map(np.array, zip(*pts))
+            layers, means, stds, balanced = map(np.array, zip(*pts))
             ax.plot(layers, means, color=SERIES[control], linewidth=2, label=LABELS[control])
             if control == "probe":
                 ax.fill_between(layers, means - stds, means + stds, color=SERIES[control], alpha=0.15, linewidth=0)
+                ax.plot(layers, balanced, color=SERIES[control], linewidth=1.2, linestyle=(0, (1, 1.5)),
+                        label="Probe, balanced accuracy")
         for control, style in (("majority", ":"), ("lexical_bow", "--")):
             value = next(r["accuracy_mean"] for r in summary_rows if r["subset"] == "all" and r["target"] == target and r["control"] == control)
             ax.axhline(value, color=INK_2, linestyle=style, linewidth=1.2, label=LABELS[control])
-        ax.set_title(f"{target}, all rows, {position} token", fontsize=10, color=INK, loc="left")
+        selected_row = next(r for r in summary_rows if r["subset"] == "all" and r["target"] == target
+                            and r["control"] == "probe" and str(r["layer"]).startswith("train_selected"))
+        auroc_note = f"; AUROC at train-selected layer {selected_row['auroc_mean']:.3f}" if "auroc_mean" in selected_row else ""
+        ax.set_title(f"{target}, all rows, {position} token{auroc_note}", fontsize=10, color=INK, loc="left")
         ax.set_xlabel("Layer (0 = embeddings)", fontsize=9, color=INK_2)
         ax.set_ylabel("Test accuracy (mean of 3 splits)", fontsize=9, color=INK_2)
         ax.set_ylim(0, 1)
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, fontsize=8, loc="lower center", ncol=5)
+    fig.legend(handles, labels, frameon=False, fontsize=8, loc="lower center", ncol=6)
     fig.suptitle(f"{model_name}: probe accuracy by layer with controls (band = ±1 sd over splits; "
                  "control task scored on its own labels)", fontsize=10, color=INK, x=0.01, ha="left")
     fig.tight_layout(rect=(0, 0.07, 1, 1))
@@ -715,6 +847,30 @@ def plot_gap(out_dir, head, model_name):
 
 # ---------- report ----------
 
+def merge_extra_batch(model_dir, out_dir, data_rows, tasks, responses, resamples):
+    """First 30 pairs (rq3/h3) stay in rq3_summary.json and headline.json; this adds the extra batch and the union."""
+    extra, extra_tasks, extra_responses = rq3_analysis(model_dir, "h3-extra")
+    write_json(out_dir / "rq3_summary_extra.json", extra)
+    overlap = sorted({str(t["pair_id"]) for t in tasks} & {str(t["pair_id"]) for t in extra_tasks})
+    merged_tasks, merged_responses = tasks + extra_tasks, responses + extra_responses
+    caution = {
+        condition: rq3_agent.summarize_outcomes(
+            merged_tasks, [r for r in merged_responses if "turn" not in r and r.get("condition") == condition], condition)
+        for condition in extra["conditions"]
+    }
+    merged = {
+        "batches": {"h3": len(tasks) // 2, "h3-extra": len(extra_tasks) // 2},
+        "pairs_in_both_batches": overlap,
+        "headline_first_batch_only": "headline.json",
+        "headline_extra_batch_only": headline(model_dir, data_rows, extra_tasks, extra_responses, resamples),
+        "headline_merged": headline(model_dir, data_rows, merged_tasks, merged_responses, resamples),
+        "rq3_merged": caution,
+    }
+    checks = {f"rq3-extra/{c}": v["checks"] for c, v in extra["conditions"].items()}
+    checks["rq3-merge"] = {"batches_disjoint": not overlap}
+    return merged, checks
+
+
 def report(model_dir, out_dir, layers, resamples):
     data_rows, _ = read_jsonl(REPO_ROOT / "data" / "sandbox.jsonl")
     summary_rows, selected = summarize_probes(out_dir, layers, resamples)
@@ -736,6 +892,10 @@ def report(model_dir, out_dir, layers, resamples):
     plot_layers(out_dir, summary_rows, selected, model_dir.name)
     plot_gap(out_dir, head, model_dir.name)
     checks = {"rq2": rq2["checks"], **{f"rq3/{c}": v["checks"] for c, v in rq3["conditions"].items()}}
+    if (model_dir / "rq3" / "h3-extra" / "summary.json").exists():
+        merged, extra_checks = merge_extra_batch(model_dir, out_dir, data_rows, tasks, responses, resamples)
+        write_json(out_dir / "headline_h3_plus_extra.json", merged)
+        checks.update(extra_checks)
     log("checks: " + json.dumps(checks))
     return checks
 
@@ -749,7 +909,7 @@ def main(argv=None):
     parser.add_argument("--layer-stride", type=int, default=1, help="probe every Nth layer plus the last")
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--bootstrap-resamples", type=int, default=1000)
-    parser.add_argument("--stage", choices=("probes", "report", "all"), default="all")
+    parser.add_argument("--stage", choices=("probes", "auroc", "report", "all"), default="all")
     args = parser.parse_args(argv)
 
     model_dir = Path(args.model_dir).resolve()
@@ -764,6 +924,8 @@ def main(argv=None):
     started = time.perf_counter()
     if args.stage in ("probes", "all"):
         run_probes(model_dir, out_dir, rows, layers, args.jobs)
+    if args.stage in ("auroc", "all"):
+        run_auroc(model_dir, out_dir, rows, layers, args.bootstrap_resamples)
     if args.stage in ("report", "all"):
         checks = report(model_dir, out_dir, layers, args.bootstrap_resamples)
         failed = [name for name, c in checks.items() for k, v in c.items() if v is False]
