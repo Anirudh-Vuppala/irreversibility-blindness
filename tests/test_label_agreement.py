@@ -142,3 +142,33 @@ def test_intra_rater_kappa_on_retest_items_without_rater2(tmp_path):
         agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", retest=tmp_path / "foreign.csv")
     no_retest = agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", resamples=20, retest=tmp_path / "none.csv")
     assert no_retest["retest_missing"] and list(no_retest["comparisons"]) == ["rater1_vs_auto"]
+
+
+def test_post_hoc_reversible_irreversible_subset_and_per_class(tmp_path):
+    key, s1, _ = _synthetic(tmp_path, rater2=False, noise=0.4)
+    result = agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", resamples=200)
+    auto = [k["auto_label"] for k in key]
+    human = [r["label_rater"] for r in s1]
+    both = [(h, a) for h, a in zip(human, auto) if {h, a} <= {"reversible", "irreversible"}]
+    overall = result["comparisons"]["rater1_vs_auto"]["overall"]
+    binary = overall["post_hoc_reversible_vs_irreversible"]
+    assert "post-hoc" in binary["note"] and binary["n_items"] == len(both)
+    assert binary["kappa"] == pytest.approx(cohen_kappa_score(*zip(*both)), abs=1e-12)
+    assert binary["percent_agreement"] == pytest.approx(sum(h == a for h, a in both) / len(both))
+    assert binary["percent_agreement_ci95"][0] <= binary["percent_agreement"] <= binary["percent_agreement_ci95"][1]
+    per_class = overall["post_hoc_per_class_agreement"]
+    for label in LABELS:
+        by_auto = [h == label for h, a in zip(human, auto) if a == label]
+        by_human = [a == label for h, a in zip(human, auto) if h == label]
+        assert per_class["by_automatic_class"][label] == {"n_items": len(by_auto),
+                                                          "percent_agreement": pytest.approx(sum(by_auto) / len(by_auto))}
+        assert per_class["by_human_class"][label]["n_items"] == len(by_human)
+        assert per_class["by_human_class"][label]["percent_agreement"] == pytest.approx(sum(by_human) / len(by_human))
+    assert "post_hoc_reversible_vs_irreversible" in result["comparisons"]["rater1_vs_auto"]["sandbox"]
+
+
+def test_post_hoc_fields_only_on_rater_vs_auto(tmp_path):
+    _synthetic(tmp_path)
+    result = agreement(tmp_path / "r1.csv", tmp_path / "r2.csv", tmp_path / "key.csv", resamples=20)
+    assert "post_hoc_per_class_agreement" not in result["comparisons"]["rater1_vs_rater2"]["overall"]
+    assert "post_hoc_per_class_agreement" in result["comparisons"]["rater2_vs_auto"]["overall"]

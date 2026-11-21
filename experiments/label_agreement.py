@@ -49,32 +49,64 @@ def kappa(a, b):
     return None if expected == 1 else (observed - expected) / (1 - expected)
 
 
-def bootstrap_kappa(a, b, clusters, resamples, seed):
+def percent_agreement(a, b):
+    return float(np.mean(np.asarray(a) == np.asarray(b)))
+
+
+def bootstrap(statistic, a, b, clusters, resamples, seed):
     rng = np.random.default_rng(seed)
     units = sorted(set(clusters))
     members = {u: np.flatnonzero(np.asarray(clusters) == u) for u in units}
     a, b, values = np.asarray(a), np.asarray(b), []
     for _ in range(resamples):
         index = np.concatenate([members[u] for u in rng.choice(units, size=len(units), replace=True)])
-        value = kappa(a[index], b[index])
+        value = statistic(a[index], b[index])
         if value is not None:
             values.append(value)
     ci = [float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5))] if values else None
     return ci, resamples - len(values)
 
 
-def compare(first, second, key, scope, resamples, seed):
+def reversible_vs_irreversible(a, b, clusters, resamples, seed):
+    """Post-hoc: items where both labels are reversible or irreversible."""
+    keep = [i for i, (x, y) in enumerate(zip(a, b)) if {x, y} <= {"reversible", "irreversible"}]
+    result = {"note": "post-hoc, not in the original plan", "n_items": len(keep)}
+    if not keep:
+        return result
+    a, b, clusters = [a[i] for i in keep], [b[i] for i in keep], [clusters[i] for i in keep]
+    kappa_ci, kappa_dropped = bootstrap(kappa, a, b, clusters, resamples, seed)
+    agreement_ci, _ = bootstrap(percent_agreement, a, b, clusters, resamples, seed)
+    return {**result, "kappa": kappa(a, b), "kappa_ci95": kappa_ci, "bootstrap_resamples_dropped": kappa_dropped,
+            "percent_agreement": percent_agreement(a, b), "percent_agreement_ci95": agreement_ci}
+
+
+def per_class_agreement(human, auto):
+    """Post-hoc: share of items in each class (by the automatic or the human label) on which both agree."""
+    def by(reference, other):
+        return {k: {"n_items": sum(r == k for r in reference),
+                    "percent_agreement": float(np.mean([o == k for r, o in zip(reference, other) if r == k]))
+                    if k in reference else None} for k in LABELS}
+    return {"note": "post-hoc, not in the original plan", "by_automatic_class": by(auto, human),
+            "by_human_class": by(human, auto)}
+
+
+def compare(first, second, key, scope, resamples, seed, post_hoc=False):
     ids = sorted(i for i in key if (scope == "overall" or key[i]["environment"] == scope)
                  and first.get(i) and second.get(i))
     result = {"n_items": len(ids)}
     if not ids:
         return result
     a, b = [first[i] for i in ids], [second[i] for i in ids]
-    ci, dropped = bootstrap_kappa(a, b, [key[i]["pair_ref"] or i for i in ids], resamples, seed)
+    clusters = [key[i]["pair_ref"] or i for i in ids]
+    ci, dropped = bootstrap(kappa, a, b, clusters, resamples, seed)
     matrix = [[sum(x == r and y == c for x, y in zip(a, b)) for c in LABELS] for r in LABELS]
-    return {**result, "observed_agreement": float(np.mean(np.array(a) == np.array(b))), "kappa": kappa(a, b),
-            "kappa_ci95": ci, "bootstrap_resamples_dropped": dropped,
-            "confusion_matrix": {"rows": "first", "columns": "second", "labels": list(LABELS), "counts": matrix}}
+    result = {**result, "observed_agreement": percent_agreement(a, b), "kappa": kappa(a, b),
+              "kappa_ci95": ci, "bootstrap_resamples_dropped": dropped,
+              "confusion_matrix": {"rows": "first", "columns": "second", "labels": list(LABELS), "counts": matrix}}
+    if post_hoc:
+        result["post_hoc_reversible_vs_irreversible"] = reversible_vs_irreversible(a, b, clusters, resamples, seed)
+        result["post_hoc_per_class_agreement"] = per_class_agreement(a, b)
+    return result
 
 
 def _optional_sheet(path, key_ids, subset=False):
@@ -103,8 +135,9 @@ def agreement(sheet1, sheet2, key_path, resamples=1000, seed=17, retest=None):
         "retest_items_labelled": sum(v is not None for v in (retest_labels or {}).values()),
         "items_labelled": {r: sum(v is not None for v in labels.values()) for r, labels in raters.items()},
         "items_total": len(key),
-        "comparisons": {f"{x}_vs_{y}": {s: compare(sources[x], sources[y], key, s, resamples, seed) for s in SCOPES}
-                        for x, y in pairs},
+        "post_hoc_note": "post_hoc_* fields in rater-vs-auto comparisons are post-hoc, not in the original plan",
+        "comparisons": {f"{x}_vs_{y}": {s: compare(sources[x], sources[y], key, s, resamples, seed, y == "auto")
+                                        for s in SCOPES} for x, y in pairs},
     }
 
 
@@ -132,6 +165,11 @@ def main(argv=None):
                 kappa_text = "undefined" if r["kappa"] is None else f"{r['kappa']:.3f}"
                 ci_text = f"[{ci[0]:.3f}, {ci[1]:.3f}]" if ci else "n/a"
                 print(f"{name:24s} {scope:12s} n={r['n_items']:3d} kappa={kappa_text} {ci_text}")
+                binary = r.get("post_hoc_reversible_vs_irreversible")
+                if binary and binary["n_items"]:
+                    k = "undefined" if binary["kappa"] is None else f"{binary['kappa']:.3f}"
+                    print(f"{'  post-hoc R vs I only':37s} n={binary['n_items']:3d} kappa={k} "
+                          f"agreement={binary['percent_agreement']:.3f}")
     if result["rater2_missing"]:
         print("rater2 sheet missing or empty: no rater1 vs rater2 or rater2 vs auto")
     if result["retest_missing"]:
