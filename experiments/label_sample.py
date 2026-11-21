@@ -82,6 +82,14 @@ def build_items(sources, per_environment, n_pairs, seed):
     return items
 
 
+def retest_records(sheet_records, n, seed):
+    """n items of the rater-1 sheet in a fresh shuffled order, labels blank."""
+    rng = random.Random(f"retest-{seed}")
+    chosen = rng.sample(sheet_records, n)
+    rng.shuffle(chosen)
+    return [{**r, "label_rater": ""} for r in chosen]
+
+
 def write_csv(path, columns, records):
     with open(path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)
@@ -97,12 +105,24 @@ def main(argv=None):
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--sandbox", default=str(SOURCES["sandbox"]))
     parser.add_argument("--scienceworld", default=str(SOURCES["scienceworld"]))
+    parser.add_argument("--retest", type=int, default=30, help="items in the rater-1 retest sheet")
+    parser.add_argument("--retest-only", action="store_true",
+                        help="only write sheet_rater1_retest.csv from the existing sheet_rater1.csv")
     parser.add_argument("--force", action="store_true", help="overwrite existing sheets")
     args = parser.parse_args(argv)
 
     out = Path(args.out_dir)
+    retest = out / "sheet_rater1_retest.csv"
+    if args.retest_only:
+        if retest.exists() and not args.force:
+            raise SystemExit("retest sheet already exists (it may hold labels); pass --force to overwrite")
+        with open(out / "sheet_rater1.csv", newline="", encoding="utf-8-sig") as handle:
+            records = [{c: r[c] for c in SHEET_COLUMNS} for r in csv.DictReader(handle)]
+        write_csv(retest, SHEET_COLUMNS, retest_records(records, args.retest, args.seed))
+        print(f"wrote {args.retest} retest items to {retest}")
+        return 0
     sheets = [out / "sheet_rater1.csv", out / "sheet_rater2.csv"]
-    if any(p.exists() for p in sheets) and not args.force:
+    if any(p.exists() for p in sheets + [retest]) and not args.force:
         raise SystemExit("rater sheets already exist (they may hold labels); pass --force to overwrite")
     sources = {"sandbox": Path(args.sandbox), "scienceworld": Path(args.scienceworld)}
     items = build_items(sources, args.per_environment, args.pairs, args.seed)
@@ -111,6 +131,7 @@ def main(argv=None):
               "action_text": i["row"]["action_text"], "label_rater": ""} for i in items]
     for sheet in sheets:
         write_csv(sheet, SHEET_COLUMNS, blank)
+    write_csv(retest, SHEET_COLUMNS, retest_records(blank, args.retest, args.seed))
     write_csv(out / "answer_key.csv", KEY_COLUMNS,
               [{"item_id": i["item_id"], "environment": i["environment"], "row_id": i["row"]["id"],
                 "pair_ref": i["pair_ref"], "auto_label": i["row"]["label"]} for i in items])
@@ -119,6 +140,7 @@ def main(argv=None):
         "sources": {e: {"path": str(p.resolve().relative_to(REPO_ROOT)) if p.resolve().is_relative_to(REPO_ROOT)
                         else str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for e, p in sources.items()},
         "items": len(items), "items_in_pairs": sum(bool(i["pair_ref"]) for i in items),
+        "retest_items": args.retest,
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {len(items)} items to {out} (answer key: answer_key.csv)")

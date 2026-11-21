@@ -104,3 +104,40 @@ def test_sample_is_blind_balanced_paired_and_deterministic(tmp_path):
             assert a["action_text"] == b["action_text"] and a["label"] != b["label"]
     assert len({(i["row"]["state_text"], i["row"]["action_text"]) for i in items}) == 100
     assert [i["row"]["id"] for i in build_items(SOURCES, 50, 5, 2026)] == [i["row"]["id"] for i in items]
+
+
+def test_retest_sheet_is_blind_subset_in_new_order(tmp_path):
+    assert sample_main(["--out-dir", str(tmp_path)]) == 0
+    read = lambda name: list(csv.DictReader(open(tmp_path / name, newline="", encoding="utf-8")))
+    full, retest = read("sheet_rater1.csv"), read("sheet_rater1_retest.csv")
+    position = {r["item_id"]: i for i, r in enumerate(full)}
+    assert len(retest) == 30 and len({r["item_id"] for r in retest}) == 30
+    assert tuple(retest[0]) == SHEET_COLUMNS and all(r["label_rater"] == "" for r in retest)
+    assert all({**r, "label_rater": ""} == full[position[r["item_id"]]] for r in retest)
+    assert [position[r["item_id"]] for r in retest] != sorted(position[r["item_id"]] for r in retest)
+    (tmp_path / "sheet_rater1_retest.csv").unlink()
+    assert sample_main(["--out-dir", str(tmp_path), "--retest-only"]) == 0
+    assert read("sheet_rater1_retest.csv") == retest
+    with pytest.raises(SystemExit):
+        sample_main(["--out-dir", str(tmp_path), "--retest-only"])
+
+
+def test_intra_rater_kappa_on_retest_items_without_rater2(tmp_path):
+    key, s1, _ = _synthetic(tmp_path, rater2=False)
+    rng = random.Random(3)
+    retest = [{**r, "label_rater": r["label_rater"] if rng.random() < 0.8 else rng.choice(LABELS)}
+              for r in rng.sample(s1, 30)]
+    _write(tmp_path / "retest.csv", SHEET_COLUMNS, retest)
+    result = agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", resamples=200, retest=tmp_path / "retest.csv")
+    assert list(result["comparisons"]) == ["rater1_vs_rater1_retest", "rater1_vs_auto"] and result["rater2_missing"]
+    intra = result["comparisons"]["rater1_vs_rater1_retest"]["overall"]
+    first = {r["item_id"]: r["label_rater"] for r in s1}
+    expected = cohen_kappa_score([first[r["item_id"]] for r in retest], [r["label_rater"] for r in retest],
+                                 labels=list(LABELS))
+    assert intra["n_items"] == 30 and intra["kappa"] == pytest.approx(expected, abs=1e-12)
+    assert intra["kappa_ci95"][0] <= intra["kappa"] <= intra["kappa_ci95"][1]
+    _write(tmp_path / "foreign.csv", SHEET_COLUMNS, [{**retest[0], "item_id": "item-999"}])
+    with pytest.raises(SystemExit):
+        agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", retest=tmp_path / "foreign.csv")
+    no_retest = agreement(tmp_path / "r1.csv", None, tmp_path / "key.csv", resamples=20, retest=tmp_path / "none.csv")
+    assert no_retest["retest_missing"] and list(no_retest["comparisons"]) == ["rater1_vs_auto"]
