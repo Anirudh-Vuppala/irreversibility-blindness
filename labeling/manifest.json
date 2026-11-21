@@ -1,0 +1,17 @@
+{
+  "seed": 2026,
+  "per_environment": 50,
+  "pairs_per_environment": 5,
+  "sources": {
+    "sandbox": {
+      "path": "data/sandbox.jsonl",
+      "sha256": "66e17e620b1d43e3df2b642f6cddd72672c0b1c02299c5149159675ef5c80a52"
+    },
+    "scienceworld": {
+      "path": "data/scienceworld.jsonl",
+      "sha256": "9fbf594da29b195b677c7573220f57583159a7d668fdd4fc4e83ec83e3726e0c"
+    }
+  },
+  "items": 100,
+  "items_in_pairs": 20
+}

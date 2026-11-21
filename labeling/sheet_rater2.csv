@@ -1,0 +1,2400 @@
+item_id,environment,state_text,action_text,label_rater
+item-001,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  invoice_april.pdf.txt (v4): ""invoice april: outline approved checked draft 404""
+  invoice_march.pdf.txt (v1): ""invoice march: updated final outline totals 886""
+  vendors.txt (v2): ""vendors: pending checked notes summary 302""
+Recycle bin: (empty)
+Backups: invoice_april.pdf.txt (saved at v3)
+Email drafts:
+  [d1] to accounts@vendor.com: ""Sort update 90""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 37100 | Savings: Rs 7000
+Pending transfers: (none)","edit_file(path=""vendors.txt"", content=""vendors: summary revised notes draft 579"")",
+item-002,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  failed_runs.log (v2): ""failed runs: totals figures approved notes 847""
+  results_run1.csv (v3): ""results run1: summary review draft checked 639""
+  summary.md (v1): ""summary: notes totals review summary 122""
+Recycle bin: config.json
+Backups: failed_runs.log (saved at v2), results_run1.csv (saved at v3)
+Email drafts:
+  [d1] to prof@uni.edu: ""Clean update 82""
+  [d2] to collaborator@lab.org: ""Clean update 88""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 48300 | Savings: Rs 66000
+Pending transfers: (none)",empty_trash(),
+item-003,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is open)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing nothing)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to stove,
+item-004,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer, which is turned off. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing nothing)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing a substance called sodium chloride, a substance called water)
+	an orange
+	A recipe titled instructions to make salt water",pour ceramic cup into freezer,
+item-005,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  build.log (v3): ""build: summary revised totals figures 786""
+  changelog.md (v4): ""changelog: outline notes review draft 696""
+  config.yaml (v3): ""config: pending outline final draft 886""
+  old_build.log (v4): ""old build: checked summary approved notes 339""
+  release_notes.md (v1): ""release notes: updated draft summary totals 939""
+Recycle bin: (empty)
+Backups: build.log (saved at v3), config.yaml (saved at v2)
+Email drafts:
+  [d1] to devops@orbit.io: ""Tidy update 20""
+  [d2] to lead@orbit.io: ""Tidy update 16""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 16100 | Savings: Rs 49000
+Pending transfers: (none)",move_to_savings(amount=6600),
+item-006,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called ice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to cupboard,
+item-007,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer, which is turned off. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called water).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into oven,
+item-008,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  build.log (v3): ""build: summary approved updated notes 562""
+  changelog.md (v2): ""changelog: updated pending revised v2 163""
+  old_build.log (v3): ""old build: outline approved v2 revised 877""
+  todo.txt (v4): ""todo: approved checked outline review 624""
+Recycle bin: config.yaml
+Backups: changelog.md (saved at v1), old_build.log (saved at v3)
+Version history: build.log (2 earlier), changelog.md (1 earlier), old_build.log (2 earlier)
+Email drafts:
+  [d1] to lead@orbit.io: ""Tidy update 76""
+  [d2] to devops@orbit.io: ""Tidy update 73""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 21100 | Savings: Rs 13000
+Pending transfers: (none)",empty_trash(),
+item-009,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  bills.txt (v4): ""bills: figures summary draft outline 167""
+  budget.csv (v4): ""budget: summary review final pending 151""
+  old_budget.csv (v2): ""old budget: revised updated approved figures 144""
+  rent_receipts.txt (v3): ""rent receipts: notes approved figures final 600""
+Recycle bin: groceries.md
+Backups: (none)
+Version history: bills.txt (3 earlier), budget.csv (3 earlier), rent_receipts.txt (2 earlier)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 93""
+  [d2] to roommate@mail.com: ""Handle update 66""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 28700 | Savings: Rs 33000
+Pending transfers: (none)",empty_trash(),
+item-010,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  build.log (v3): ""build: summary checked updated review 86""
+  changelog.md (v2): ""changelog: notes v2 totals final 477""
+  config.yaml (v1): ""config: approved checked figures summary 86""
+  old_build.log (v3): ""old build: review v2 outline checked 627""
+  todo.txt (v2): ""todo: draft checked totals revised 506""
+Recycle bin: release_notes.md
+Backups: (none)
+Version history: build.log (2 earlier), changelog.md (1 earlier), old_build.log (2 earlier)
+Email drafts:
+  [d1] to devops@orbit.io: ""Tidy update 23""
+  [d2] to lead@orbit.io: ""Tidy update 82""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 10300 | Savings: Rs 67000
+Pending transfers: (none)",move_to_savings(amount=2600),
+item-011,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  budget.csv (v2): ""budget: updated draft pending outline 793""
+  groceries.md (v3): ""groceries: checked approved totals draft 783""
+  old_budget.csv (v1): ""old budget: final notes checked review 315""
+Recycle bin: (empty)
+Backups: budget.csv (saved at v1)
+Version history: budget.csv (1 earlier), groceries.md (2 earlier)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 34""
+  [d2] to roommate@mail.com: ""Handle update 96""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 43400 | Savings: Rs 41000
+Pending transfers: (none)",check_balance(),
+item-012,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned on. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called water).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into oven,
+item-013,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  album_index.md (v3): ""album index: review checked outline summary 732""
+  family.jpg.txt (v2): ""family: approved review updated pending 498""
+  screenshots.txt (v2): ""screenshots: outline figures revised review 673""
+  trip_2024.zip.txt (v3): ""trip 2024: pending review final totals 824""
+  wedding.jpg.txt (v1): ""wedding: notes pending checked figures 623""
+Recycle bin: (empty)
+Backups: album_index.md (saved at v3)
+Email drafts:
+  [d1] to mom@family.net: ""Free update 24""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 54300 | Savings: Rs 37000
+Pending transfers: (none)",move_to_savings(amount=27300),
+item-014,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  build.log (v1): ""build: pending revised notes v2 592""
+  changelog.md (v2): ""changelog: checked draft totals pending 737""
+  config.yaml (v2): ""config: figures summary review checked 957""
+  old_build.log (v1): ""old build: final approved updated summary 891""
+  release_notes.md (v4): ""release notes: figures checked v2 summary 848""
+Recycle bin: todo.txt
+Backups: config.yaml (saved at v2)
+Version history: (none)
+Email drafts:
+  [d1] to lead@orbit.io: ""Tidy update 61""
+  [d2] to devops@orbit.io: ""Tidy update 51""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 30400 | Savings: Rs 4000
+Pending transfers: (none)","transfer_money(to=""cloudhost"", amount=2200)",
+item-015,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a glass cup (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is open)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pick up cup containing nothing in fridge,
+item-016,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a metal pot (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour glass jar into freezer,
+item-017,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  results_run1.csv (v2): ""results run1: checked outline v2 summary 855""
+  results_run2.csv (v1): ""results run2: v2 updated pending summary 30""
+  scratch.py (v2): ""scratch: totals updated pending outline 82""
+Recycle bin: (empty)
+Backups: results_run2.csv (saved at v1)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 38""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 36900 | Savings: Rs 63000
+Pending transfers: (none)","send_email(draft_id=""d1"")",
+item-018,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  draft_old.tex (v3): ""draft old: approved draft pending revised 932""
+  figures.txt (v1): ""figures: notes approved draft totals 63""
+  refs.bib (v1): ""refs: final figures revised totals 272""
+Recycle bin: chapter1.tex
+Backups: (none)
+Email drafts:
+  [d1] to supervisor@uni.edu: ""Get update 30""
+  [d2] to labmate@uni.edu: ""Get update 19""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 57800 | Savings: Rs 38000
+Pending transfers: (none)",list_files(),
+item-019,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  invoice_march.pdf.txt (v4): ""invoice march: revised updated figures final 535""
+  payments.csv (v1): ""payments: approved figures updated final 599""
+  vendors.txt (v1): ""vendors: totals revised summary notes 245""
+Recycle bin: (empty)
+Backups: payments.csv (saved at v1)
+Version history: (none)
+Email drafts:
+  [d1] to finance@myco.com: ""Sort update 71""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 48700 | Savings: Rs 14000
+Pending transfers: (none)","edit_file(path=""invoice_march.pdf.txt"", content=""invoice march: approved summary figures notes 413"")",
+item-020,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  bills.txt (v3): ""bills: notes v2 outline updated 671""
+  budget.csv (v1): ""budget: review v2 revised checked 933""
+  old_budget.csv (v1): ""old budget: revised final outline v2 825""
+  rent_receipts.txt (v3): ""rent receipts: notes totals figures draft 886""
+Recycle bin: (empty)
+Backups: rent_receipts.txt (saved at v3)
+Version history: (none)
+Email drafts:
+  [d2] to landlord@flats.in: ""Handle update 31""
+Outbox:
+  [d1] to roommate@mail.com: ""Handle update 33""
+Sent:
+  (none)
+Account balance: Rs 58800 | Savings: Rs 3000
+Pending transfers: (none)","undo_send(email_id=""d1"")",
+item-021,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a glass cup (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is open)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pick up cup containing nothing in fridge,
+item-022,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  failed_runs.log (v3): ""failed runs: outline pending notes totals 823""
+  scratch.py (v2): ""scratch: figures checked review pending 748""
+  summary.md (v4): ""summary: review v2 outline approved 198""
+Recycle bin: results_run1.csv
+Backups: (none)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 20""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 9300 | Savings: Rs 28000
+Pending transfers: (none)","write_file(path=""config.json"", content=""config: outline figures review revised 626"")",
+item-023,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  album_index.md (v2): ""album index: outline summary checked final 196""
+  duplicates.txt (v1): ""duplicates: totals updated pending summary 341""
+  family.jpg.txt (v3): ""family: updated summary checked approved 333""
+  trip_2024.zip.txt (v4): ""trip 2024: draft pending approved final 938""
+  wedding.jpg.txt (v2): ""wedding: totals figures v2 approved 536""
+Recycle bin: screenshots.txt
+Backups: family.jpg.txt (saved at v2)
+Version history: wedding.jpg.txt (1 earlier)
+Email drafts:
+  [d1] to friend@mail.com: ""Free update 72""
+  [d2] to mom@family.net: ""Free update 13""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 46900 | Savings: Rs 36000
+Pending transfers: (none)","write_file(path=""new_notes.txt"", content=""new notes: updated final notes revised 679"")",
+item-024,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  config.json (v3): ""config: approved final totals revised 149""
+  failed_runs.log (v4): ""failed runs: v2 checked summary totals 860""
+  results_run2.csv (v1): ""results run2: notes outline updated draft 718""
+  scratch.py (v3): ""scratch: revised updated outline review 977""
+  summary.md (v2): ""summary: summary figures approved revised 853""
+Recycle bin: (empty)
+Backups: config.json (saved at v2), results_run2.csv (saved at v1)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 22""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 49800 | Savings: Rs 47000
+Pending transfers: (none)",list_files(),
+item-025,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  agenda.md (v4): ""agenda: pending summary totals draft 275""
+  attendees.csv (v2): ""attendees: final totals v2 figures 490""
+  menu.txt (v2): ""menu: review approved revised checked 878""
+  old_agenda.md (v3): ""old agenda: checked revised pending v2 736""
+  venue_quote.txt (v3): ""venue quote: v2 notes review checked 214""
+Recycle bin: old.txt
+Backups: attendees.csv (saved at v2), venue_quote.txt (saved at v3)
+Email drafts:
+  [d1] to venue@resort.in: ""Finalise update 66""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 41000 | Savings: Rs 27000
+Pending transfers: (none)",empty_trash(),
+item-026,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	bread
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is closed. 
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	A recipe titled instructions to make banana sandwich
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange",pick up bread,
+item-027,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: a metal pot (containing a substance called water).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into sink,
+item-028,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing nothing)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pick up cup containing orange juice,
+item-029,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called ice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into fridge,
+item-030,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  build.log (v2): ""build: updated outline approved totals 336""
+  config.yaml (v4): ""config: notes summary v2 figures 846""
+  old_build.log (v1): ""old build: summary outline review draft 85""
+  release_notes.md (v3): ""release notes: summary final approved checked 343""
+Recycle bin: (empty)
+Backups: config.yaml (saved at v4), release_notes.md (saved at v3)
+Email drafts:
+  [d1] to devops@orbit.io: ""Tidy update 26""
+  [d2] to lead@orbit.io: ""Tidy update 1""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 25100 | Savings: Rs 29000
+Pending transfers: (none)","edit_file(path=""release_notes.md"", content=""release notes: figures revised draft updated 80"")",
+item-031,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing A blank paper)
+	an orange
+	A recipe titled instructions to make blue paper",move ceramic cup to fridge,
+item-032,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing nothing)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing a substance called sodium chloride, a substance called water)
+	an orange
+	A recipe titled instructions to make salt water",mix ceramic cup,
+item-033,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a jug (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour glass jar into jug,
+item-034,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  candidates.csv (v3): ""candidates: figures v2 updated review 693""
+  interview_notes.txt (v1): ""interview notes: v2 approved figures revised 779""
+  offer_letter.md (v3): ""offer letter: checked totals outline summary 985""
+Recycle bin: (empty)
+Backups: candidates.csv (saved at v2), interview_notes.txt (saved at v1)
+Version history: candidates.csv (2 earlier)
+Email drafts:
+  [d1] to candidate1@mail.com: ""Wrap update 85""
+  [d2] to hr@myco.com: ""Wrap update 75""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 34200 | Savings: Rs 7000
+Pending transfers: (none)",withdraw_savings(amount=4000),
+item-035,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing nothing)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: a ceramic cup (containing a substance called sodium chloride, a substance called water).
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	A recipe titled instructions to make salt water",mix ceramic cup,
+item-036,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  duplicate_invoice.txt (v4): ""duplicate invoice: checked outline notes figures 715""
+  invoice_april.pdf.txt (v2): ""invoice april: v2 outline revised checked 344""
+  invoice_march.pdf.txt (v1): ""invoice march: totals checked pending figures 270""
+  payments.csv (v2): ""payments: summary checked updated pending 209""
+  vendors.txt (v3): ""vendors: review updated approved v2 2""
+Recycle bin: (empty)
+Backups: invoice_april.pdf.txt (saved at v1), vendors.txt (saved at v3)
+Email drafts:
+  [d1] to finance@myco.com: ""Sort update 68""
+  [d2] to accounts@vendor.com: ""Sort update 6""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 32000 | Savings: Rs 33000
+Pending transfers: (none)","delete_file(path=""invoice_march.pdf.txt"")",
+item-037,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  results_run1.csv (v1): ""results run1: summary figures updated checked 79""
+  results_run2.csv (v3): ""results run2: notes checked outline v2 806""
+  scratch.py (v1): ""scratch: review final outline figures 596""
+Recycle bin: summary.md
+Backups: results_run2.csv (saved at v2)
+Version history: (none)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 8""
+  [d2] to prof@uni.edu: ""Clean update 6""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 24400 | Savings: Rs 64000
+Pending transfers: (none)","backup_file(path=""results_run1.csv"")",
+item-038,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: nothing.
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a glass cup (containing a banana, bread)
+	an orange
+	A recipe titled instructions to make banana sandwich",mix cup containing banana and bread,
+item-039,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  candidates.csv (v2): ""candidates: checked approved updated figures 220""
+  interview_notes.txt (v1): ""interview notes: approved revised notes review 180""
+  offer_letter.md (v4): ""offer letter: totals notes final approved 102""
+  rejections.md (v1): ""rejections: summary checked notes updated 763""
+  salary_bands.txt (v2): ""salary bands: updated outline summary final 43""
+Recycle bin: (empty)
+Backups: (none)
+Version history: candidates.csv (1 earlier), offer_letter.md (3 earlier), salary_bands.txt (1 earlier)
+Email drafts:
+  [d1] to candidate2@mail.com: ""Wrap update 38""
+  [d2] to candidate1@mail.com: ""Wrap update 19""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 21100 | Savings: Rs 35000
+Pending transfers: (none)","backup_file(path=""candidates.csv"")",
+item-040,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  candidates.csv (v2): ""candidates: outline checked draft pending 349""
+  interview_notes.txt (v4): ""interview notes: draft review checked totals 92""
+  offer_letter.md (v3): ""offer letter: notes totals draft checked 585""
+  rejections.md (v2): ""rejections: totals summary notes approved 167""
+  salary_bands.txt (v4): ""salary bands: approved pending totals figures 16""
+Recycle bin: old.txt
+Backups: (none)
+Email drafts:
+  [d1] to candidate1@mail.com: ""Wrap update 93""
+  [d2] to candidate2@mail.com: ""Wrap update 16""
+  [d3] to hr@myco.com: ""Wrap update 52""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 40400 | Savings: Rs 63000
+Pending transfers: (none)",empty_trash(),
+item-041,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  chapter1.tex (v3): ""chapter1: summary updated figures pending 175""
+  chapter2.tex (v3): ""chapter2: draft summary revised figures 991""
+  draft_old.tex (v2): ""draft old: updated final figures revised 199""
+  notes.txt (v4): ""notes: updated outline draft final 992""
+  refs.bib (v4): ""refs: draft figures pending updated 979""
+Recycle bin: (empty)
+Backups: chapter1.tex (saved at v3), draft_old.tex (saved at v2)
+Version history: chapter1.tex (2 earlier), chapter2.tex (2 earlier), draft_old.tex (1 earlier)
+Email drafts:
+  [d1] to supervisor@uni.edu: ""Get update 46""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 11800 | Savings: Rs 44000
+Pending transfers: (none)","delete_file(path=""notes.txt"")",
+item-042,scienceworld,"This outside location is called the outside. Here you see: 
+	the agent
+	a substance called air
+	an axe
+	a blue jay egg
+	a butterfly egg
+	a dove egg
+	a fire pit (containing nothing)
+	a fountain (containing a substance called water)
+	the ground
+	a substance called wood
+You also see:
+	A door to the foundry (that is closed)
+	A door to the greenhouse (that is open)
+	A door to the kitchen (that is open)
+
+In your inventory, you see:
+	a flower pot 3 (containing a cherry tree in the reproducing stage, soil)
+	an orange",close door to greenhouse,
+item-043,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: a metal pot (containing a substance called ice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move metal pot to freezer,
+item-044,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing a substance called soap, a substance called water)
+	an orange
+	A recipe titled instructions to make soapy water",mix ceramic cup,
+item-045,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing A blank paper)
+	an orange
+	A recipe titled instructions to make blue paper",deactivate fridge,
+item-046,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called water)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into stove,
+item-047,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  agenda.md (v3): ""agenda: final outline figures revised 791""
+  old_agenda.md (v2): ""old agenda: pending checked revised updated 605""
+  venue_quote.txt (v2): ""venue quote: revised summary pending totals 808""
+Recycle bin: (empty)
+Backups: (none)
+Email drafts:
+  [d1] to team@myco.com: ""Finalise update 18""
+  [d2] to venue@resort.in: ""Finalise update 85""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 46600 | Savings: Rs 23000
+Pending transfers: (none)",move_to_savings(amount=46400),
+item-048,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called ice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",deactivate stove,
+item-049,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  attendees.csv (v2): ""attendees: revised summary draft notes 139""
+  menu.txt (v2): ""menu: approved revised v2 final 628""
+  venue_quote.txt (v1): ""venue quote: v2 figures notes updated 142""
+Recycle bin: (empty)
+Backups: venue_quote.txt (saved at v1)
+Version history: attendees.csv (1 earlier), menu.txt (1 earlier)
+Email drafts:
+  [d1] to venue@resort.in: ""Finalise update 99""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 31800 | Savings: Rs 20000
+Pending transfers: (none)",move_to_savings(amount=12500),
+item-050,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  config.json (v1): ""config: final figures approved checked 890""
+  failed_runs.log (v4): ""failed runs: review totals summary notes 923""
+  results_run2.csv (v4): ""results run2: totals summary pending checked 669""
+  scratch.py (v1): ""scratch: final revised notes checked 241""
+Recycle bin: (empty)
+Backups: failed_runs.log (saved at v4), scratch.py (saved at v1)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 50""
+  [d2] to prof@uni.edu: ""Clean update 29""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 6900 | Savings: Rs 35000
+Pending transfers: (none)","write_file(path=""summary.md"", content=""summary: pending final checked updated 228"")",
+item-051,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  bills.txt (v4): ""bills: approved pending checked final 634""
+  budget.csv (v2): ""budget: final totals updated revised 4""
+  groceries.md (v1): ""groceries: v2 draft approved review 285""
+  old_budget.csv (v2): ""old budget: figures summary outline final 602""
+  rent_receipts.txt (v3): ""rent receipts: figures revised approved checked 618""
+Recycle bin: old.txt
+Backups: bills.txt (saved at v4), old_budget.csv (saved at v2)
+Version history: budget.csv (1 earlier), old_budget.csv (1 earlier)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 42""
+  [d2] to roommate@mail.com: ""Handle update 15""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 15400 | Savings: Rs 53000
+Pending transfers: (none)",move_to_savings(amount=7400),
+item-052,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  bills.txt (v3): ""bills: pending totals updated summary 745""
+  budget.csv (v1): ""budget: approved review updated outline 354""
+  groceries.md (v4): ""groceries: draft final updated checked 312""
+  old_budget.csv (v3): ""old budget: updated review outline v2 810""
+  rent_receipts.txt (v1): ""rent receipts: draft approved summary checked 202""
+Recycle bin: (empty)
+Backups: groceries.md (saved at v4)
+Version history: (none)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 88""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 30100 | Savings: Rs 55000
+Pending transfers: (none)","edit_file(path=""old_budget.csv"", content=""old budget: final figures updated outline 516"")",
+item-053,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a jug (containing apple juice), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing nothing)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour glass jar into fridge,
+item-054,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	cashew
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing almond, peanut)
+	an orange
+	A recipe titled instructions to make mixed nuts",pick up almond,
+item-055,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: a metal pot (containing a substance called ice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move glass jar to stove,
+item-056,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  invoice_april.pdf.txt (v4): ""invoice april: final review outline figures 547""
+  invoice_march.pdf.txt (v1): ""invoice march: approved v2 pending revised 577""
+  payments.csv (v3): ""payments: revised updated draft final 708""
+Recycle bin: (empty)
+Backups: invoice_april.pdf.txt (saved at v4), invoice_march.pdf.txt (saved at v1), payments.csv (saved at v2)
+Email drafts:
+  [d1] to finance@myco.com: ""Sort update 11""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 21300 | Savings: Rs 10000
+Pending transfers: (none)","restore_backup(path=""payments.csv"")",
+item-057,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  bills.txt (v4): ""bills: approved pending checked final 634""
+  budget.csv (v2): ""budget: final totals updated revised 4""
+  groceries.md (v1): ""groceries: v2 draft approved review 285""
+  old_budget.csv (v2): ""old budget: figures summary outline final 602""
+  rent_receipts.txt (v3): ""rent receipts: figures revised approved checked 618""
+Recycle bin: old.txt
+Backups: bills.txt (saved at v4), old_budget.csv (saved at v2)
+Version history: budget.csv (1 earlier), old_budget.csv (1 earlier)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 42""
+  [d2] to roommate@mail.com: ""Handle update 15""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 15400 | Savings: Rs 53000
+Pending transfers: (none)","transfer_money(to=""internet-isp"", amount=9400)",
+item-058,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing nothing)
+	a lighter
+	a oven, which is turned on. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing a substance called sodium chloride)
+	an orange
+	A recipe titled instructions to make salt water",pour ceramic cup into oven,
+item-059,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a glass cup (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is open)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move cup containing nothing in fridge to metal pot,
+item-060,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called ice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move ice to stove,
+item-061,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  chapter2.tex (v3): ""chapter2: pending approved updated totals 941""
+  notes.txt (v3): ""notes: notes final v2 summary 506""
+  refs.bib (v1): ""refs: revised pending outline totals 756""
+Recycle bin: (empty)
+Backups: chapter2.tex (saved at v3), notes.txt (saved at v3), refs.bib (saved at v1)
+Version history: chapter2.tex (2 earlier)
+Email drafts:
+  [d1] to labmate@uni.edu: ""Get update 49""
+  [d2] to supervisor@uni.edu: ""Get update 84""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 17700 | Savings: Rs 57000
+Pending transfers: (none)","transfer_money(to=""print-shop"", amount=13000)",
+item-062,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: a metal pot (containing a substance called water).
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",close freezer,
+item-063,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: a ceramic cup (containing a substance called soap, a substance called water).
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	A recipe titled instructions to make soapy water",mix ceramic cup,
+item-064,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  build.log (v3): ""build: review totals v2 final 890""
+  config.yaml (v3): ""config: v2 updated final notes 333""
+  old_build.log (v4): ""old build: v2 totals draft updated 143""
+  release_notes.md (v1): ""release notes: draft summary figures updated 961""
+  todo.txt (v2): ""todo: figures approved final pending 663""
+Recycle bin: (empty)
+Backups: config.yaml (saved at v3)
+Email drafts:
+  [d1] to lead@orbit.io: ""Tidy update 99""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 59200 | Savings: Rs 68000
+Pending transfers: (none)",move_to_savings(amount=49300),
+item-065,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a drawer, a metal pot (containing nothing), a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a ceramic cup (containing A blank paper)
+	an orange
+	A recipe titled instructions to make blue paper",pour glass jar into freezer,
+item-066,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  agenda.md (v3): ""agenda: final outline figures revised 791""
+  old_agenda.md (v2): ""old agenda: pending checked revised updated 605""
+  venue_quote.txt (v2): ""venue quote: revised summary pending totals 808""
+Recycle bin: (empty)
+Backups: (none)
+Email drafts:
+  [d1] to team@myco.com: ""Finalise update 18""
+  [d2] to venue@resort.in: ""Finalise update 85""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 46600 | Savings: Rs 23000
+Pending transfers: (none)",move_to_savings(amount=46400),
+item-067,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  family.jpg.txt (v4): ""family: approved summary v2 updated 424""
+  screenshots.txt (v2): ""screenshots: updated v2 revised summary 482""
+  trip_2024.zip.txt (v4): ""trip 2024: pending v2 summary revised 860""
+  wedding.jpg.txt (v1): ""wedding: pending summary totals revised 662""
+Recycle bin: (empty)
+Backups: trip_2024.zip.txt (saved at v4)
+Version history: screenshots.txt (1 earlier)
+Email drafts:
+  [d1] to friend@mail.com: ""Free update 59""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 48300 | Savings: Rs 29000
+Pending transfers: (none)",move_to_savings(amount=11300),
+item-068,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: a metal pot (containing orange juice).
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing nothing).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is closed)
+	A door to the outside (that is open)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to freezer,
+item-069,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: a metal pot (containing a substance called water).
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into stove,
+item-070,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer, which is turned off. The freezer door is open. In the freezer is: a substance called ice.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing nothing)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move ice to metal pot,
+item-071,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is closed. 
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	A blank paper
+	A recipe titled instructions to make blue paper
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange",deactivate fridge,
+item-072,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	bread
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is closed. 
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	A recipe titled instructions to make banana sandwich
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange",pick up banana,
+item-073,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned on. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called water).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move glass jar to stove,
+item-074,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a glass cup (containing nothing), a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is open)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing apple juice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to stove,
+item-075,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  candidates.csv (v1): ""candidates: approved figures revised pending 41""
+  interview_notes.txt (v4): ""interview notes: pending checked final totals 714""
+  offer_letter.md (v1): ""offer letter: checked pending totals v2 753""
+  rejections.md (v3): ""rejections: v2 approved pending figures 432""
+Recycle bin: (empty)
+Backups: candidates.csv (saved at v1), interview_notes.txt (saved at v3)
+Version history: (none)
+Email drafts:
+  [d1] to candidate2@mail.com: ""Wrap update 31""
+  [d2] to hr@myco.com: ""Wrap update 91""
+  [d3] to candidate1@mail.com: ""Wrap update 81""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 23300 | Savings: Rs 58000
+Pending transfers: (none)","edit_file(path=""offer_letter.md"", content=""offer letter: v2 pending checked final 325"")",
+item-076,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: a metal pot (containing a substance called water).
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into sink,
+item-077,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  bills.txt (v1): ""bills: outline totals pending revised 884""
+  budget.csv (v1): ""budget: totals approved figures review 365""
+  old_budget.csv (v4): ""old budget: outline revised review approved 588""
+  rent_receipts.txt (v3): ""rent receipts: outline figures notes checked 241""
+Recycle bin: (empty)
+Backups: (none)
+Version history: old_budget.csv (3 earlier), rent_receipts.txt (2 earlier)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 2""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 18800 | Savings: Rs 75000
+Pending transfers: (none)","delete_file(path=""old_budget.csv"")",
+item-078,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  candidates.csv (v4): ""candidates: approved final review totals 378""
+  interview_notes.txt (v4): ""interview notes: v2 final review outline 415""
+  offer_letter.md (v1): ""offer letter: v2 draft checked final 914""
+  rejections.md (v3): ""rejections: revised pending outline checked 468""
+  salary_bands.txt (v2): ""salary bands: totals updated review figures 271""
+Recycle bin: (empty)
+Backups: rejections.md (saved at v3), salary_bands.txt (saved at v2)
+Version history: candidates.csv (3 earlier), interview_notes.txt (3 earlier), rejections.md (2 earlier), salary_bands.txt (1 earlier)
+Email drafts:
+  [d1] to candidate2@mail.com: ""Wrap update 13""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 19100 | Savings: Rs 7000
+Pending transfers: (none)",move_to_savings(amount=8400),
+item-079,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  failed_runs.log (v3): ""failed runs: outline pending notes totals 823""
+  scratch.py (v2): ""scratch: figures checked review pending 748""
+  summary.md (v4): ""summary: review v2 outline approved 198""
+Recycle bin: (empty)
+Backups: (none)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 20""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 9300 | Savings: Rs 28000
+Pending transfers: gpu-cloud:2200","cancel_transfer(transfer_id=""gpu-cloud:2200"")",
+item-080,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called ice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into fridge,
+item-081,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  failed_runs.log (v3): ""failed runs: outline pending notes totals 823""
+  scratch.py (v2): ""scratch: figures checked review pending 748""
+  summary.md (v4): ""summary: review v2 outline approved 198""
+Recycle bin: (empty)
+Backups: (none)
+Email drafts:
+  [d1] to collaborator@lab.org: ""Clean update 20""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 9300 | Savings: Rs 28000
+Pending transfers: (none)","write_file(path=""config.json"", content=""config: outline figures review revised 626"")",
+item-082,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  chapter1.tex (v1): ""chapter1: approved revised final notes 323""
+  chapter2.tex (v3): ""chapter2: notes draft outline v2 414""
+  notes.txt (v2): ""notes: final updated v2 notes 994""
+  refs.bib (v2): ""refs: pending approved totals notes 253""
+Recycle bin: (empty)
+Backups: (none)
+Version history: chapter2.tex (2 earlier), refs.bib (1 earlier)
+Email drafts:
+  [d1] to labmate@uni.edu: ""Get update 43""
+  [d2] to supervisor@uni.edu: ""Get update 79""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 14200 | Savings: Rs 26000
+Pending transfers: (none)","delete_file(path=""notes.txt"")",
+item-083,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: a metal pot (containing a substance called ice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move glass jar to drawer in counter,
+item-084,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer, which is turned off. The freezer door is open. In the freezer is: nothing.
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called ice)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",activate freezer,
+item-085,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  candidates.csv (v1): ""candidates: checked v2 final updated 365""
+  interview_notes.txt (v1): ""interview notes: final notes revised pending 148""
+  rejections.md (v4): ""rejections: final checked v2 figures 254""
+  salary_bands.txt (v2): ""salary bands: review summary approved outline 701""
+Recycle bin: (empty)
+Backups: candidates.csv (saved at v1)
+Version history: rejections.md (3 earlier), salary_bands.txt (1 earlier)
+Email drafts:
+  [d1] to candidate2@mail.com: ""Wrap update 3""
+  [d2] to candidate1@mail.com: ""Wrap update 33""
+  [d3] to hr@myco.com: ""Wrap update 24""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 36200 | Savings: Rs 22000
+Pending transfers: (none)","write_file(path=""offer_letter.md"", content=""offer letter: outline draft approved review 964"")",
+item-086,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is open. In the freezer is: nothing.
+	a fridge, which is turned off. The fridge door is open. In the fridge is: a wood cup (containing orange juice).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is open. In the oven is: nothing.
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: a metal pot (containing a substance called water).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",pour metal pot into fridge,
+item-087,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  bills.txt (v4): ""bills: review v2 approved pending 394""
+  budget.csv (v1): ""budget: figures approved notes totals 235""
+  groceries.md (v3): ""groceries: figures v2 revised summary 295""
+Recycle bin: old_budget.csv
+Backups: (none)
+Version history: (none)
+Email drafts:
+  [d1] to landlord@flats.in: ""Handle update 38""
+  [d2] to roommate@mail.com: ""Handle update 16""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 50600 | Savings: Rs 19000
+Pending transfers: (none)","transfer_money(to=""internet-isp"", amount=24100)",
+item-088,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  build.log (v2): ""build: updated outline approved totals 336""
+  config.yaml (v4): ""config: notes summary v2 figures 846""
+  old_build.log (v1): ""old build: summary outline review draft 85""
+  release_notes.md (v3): ""release notes: summary final approved checked 343""
+Recycle bin: (empty)
+Backups: config.yaml (saved at v4)
+Version history: (none)
+Email drafts:
+  [d1] to devops@orbit.io: ""Tidy update 26""
+  [d2] to lead@orbit.io: ""Tidy update 1""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 25100 | Savings: Rs 29000
+Pending transfers: (none)","edit_file(path=""release_notes.md"", content=""release notes: figures revised draft updated 80"")",
+item-089,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a metal pot (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is closed)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	A recipe titled instructions to make mixed nuts
+	a tin cup (containing almond, cashew, peanut)",mix cup containing almond and cashew and peanut,
+item-090,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing nothing)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to cupboard,
+item-091,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 0%
+Files:
+  screenshots.txt (v3): ""screenshots: review pending notes summary 595""
+  trip_2024.zip.txt (v1): ""trip 2024: pending outline revised approved 40""
+  wedding.jpg.txt (v4): ""wedding: approved final checked pending 847""
+Recycle bin: family.jpg.txt
+Backups: (none)
+Email drafts:
+  [d1] to mom@family.net: ""Free update 30""
+  [d2] to friend@mail.com: ""Free update 56""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 52600 | Savings: Rs 37000
+Pending transfers: (none)","write_file(path=""album_index.md"", content=""album index: final review draft v2 45"")",
+item-092,sandbox,"Settings:
+  Recycle bin: off
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  duplicate_invoice.txt (v4): ""duplicate invoice: checked outline notes figures 715""
+  invoice_april.pdf.txt (v2): ""invoice april: v2 outline revised checked 344""
+  invoice_march.pdf.txt (v1): ""invoice march: totals checked pending figures 270""
+  payments.csv (v2): ""payments: summary checked updated pending 209""
+  vendors.txt (v3): ""vendors: review updated approved v2 2""
+Recycle bin: (empty)
+Backups: invoice_april.pdf.txt (saved at v1), vendors.txt (saved at v3)
+Email drafts:
+  [d1] to finance@myco.com: ""Sort update 68""
+  [d2] to accounts@vendor.com: ""Sort update 6""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 32000 | Savings: Rs 33000
+Pending transfers: (none)","delete_file(path=""invoice_march.pdf.txt"")",
+item-093,sandbox,"Settings:
+  Recycle bin: on
+  Version history: off
+  Email send delay: 60 seconds
+  Bank transfers: instant
+  Savings withdrawal fee: 2%
+Files:
+  album_index.md (v3): ""album index: pending draft updated outline 360""
+  family.jpg.txt (v4): ""family: draft revised final checked 263""
+  trip_2024.zip.txt (v1): ""trip 2024: final checked summary outline 625""
+  wedding.jpg.txt (v1): ""wedding: totals final updated summary 457""
+Recycle bin: (empty)
+Backups: album_index.md (saved at v2), trip_2024.zip.txt (saved at v1)
+Email drafts:
+  [d1] to friend@mail.com: ""Free update 4""
+  [d2] to mom@family.net: ""Free update 69""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 54900 | Savings: Rs 51000
+Pending transfers: (none)","send_email(draft_id=""d1"")",
+item-094,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	a metal pot (containing a substance called water)
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to cupboard,
+item-095,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is open. In the fridge is: a wood cup (containing nothing).
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: a metal pot (containing orange juice).
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is closed)
+	A door to the outside (that is open)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",move thermometer to cup containing nothing in fridge,
+item-096,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is closed. 
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned off. In the sink is: nothing.
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned on. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+	a thermometer, currently reading a temperature of 10 degrees celsius
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange",move glass jar to stove,
+item-097,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  album_index.md (v1): ""album index: totals revised approved final 766""
+  family.jpg.txt (v3): ""family: pending final revised updated 305""
+  screenshots.txt (v2): ""screenshots: approved final totals review 501""
+  trip_2024.zip.txt (v2): ""trip 2024: v2 draft final outline 726""
+  wedding.jpg.txt (v1): ""wedding: v2 figures updated notes 821""
+Recycle bin: (empty)
+Backups: album_index.md (saved at v1), family.jpg.txt (saved at v2), screenshots.txt (saved at v2), wedding.jpg.txt (saved at v1)
+Version history: family.jpg.txt (2 earlier), trip_2024.zip.txt (1 earlier)
+Email drafts:
+  [d1] to mom@family.net: ""Free update 60""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 24300 | Savings: Rs 5000
+Pending transfers: (none)","write_file(path=""duplicates.txt"", content=""duplicates: outline review final checked 387"")",
+item-098,sandbox,"Settings:
+  Recycle bin: off
+  Version history: on
+  Email send delay: none
+  Bank transfers: scheduled for end of day
+  Savings withdrawal fee: 2%
+Files:
+  agenda.md (v1): ""agenda: figures checked pending draft 819""
+  attendees.csv (v2): ""attendees: pending updated v2 figures 296""
+  menu.txt (v4): ""menu: notes outline checked revised 500""
+  venue_quote.txt (v1): ""venue quote: final outline draft pending 46""
+Recycle bin: (empty)
+Backups: menu.txt (saved at v4)
+Version history: (none)
+Email drafts:
+  [d1] to venue@resort.in: ""Finalise update 27""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 30300 | Savings: Rs 30000
+Pending transfers: (none)","edit_file(path=""venue_quote.txt"", content=""venue quote: figures checked outline totals 427"")",
+item-099,sandbox,"Settings:
+  Recycle bin: on
+  Version history: on
+  Email send delay: none
+  Bank transfers: instant
+  Savings withdrawal fee: 0%
+Files:
+  album_index.md (v1): ""album index: totals revised approved final 766""
+  family.jpg.txt (v3): ""family: pending final revised updated 305""
+  screenshots.txt (v2): ""screenshots: approved final totals review 501""
+  trip_2024.zip.txt (v2): ""trip 2024: v2 draft final outline 726""
+  wedding.jpg.txt (v1): ""wedding: v2 figures updated notes 821""
+Recycle bin: duplicates.txt
+Backups: album_index.md (saved at v1), family.jpg.txt (saved at v2), screenshots.txt (saved at v2), wedding.jpg.txt (saved at v1)
+Version history: family.jpg.txt (2 earlier), trip_2024.zip.txt (1 earlier)
+Email drafts:
+  [d1] to mom@family.net: ""Free update 60""
+Outbox:
+  (none)
+Sent:
+  (none)
+Account balance: Rs 24300 | Savings: Rs 5000
+Pending transfers: (none)","write_file(path=""duplicates.txt"", content=""duplicates: outline review final checked 387"")",
+item-100,scienceworld,"This room is called the kitchen. In it, you see: 
+	the agent
+	a substance called air
+	a chair. On the chair is: nothing.
+	a counter. On the counter is: a bowl (containing a red apple, a banana, an orange, a potato), a drawer.
+	a cupboard. The cupboard door is open. In the cupboard is: a ceramic cup (containing nothing), a drawer, a tin cup (containing nothing).
+	a freezer. The freezer door is closed. 
+	a fridge. The fridge door is closed. 
+	a glass jar (containing a substance called sodium chloride)
+	a lighter
+	a oven, which is turned off. The oven door is closed. 
+	a painting
+	a sink, which is turned on. In the sink is: a metal pot (containing a substance called water).
+	a substance called soap
+	a stopwatch, which is deactivated. 
+	a stove, which is turned off. On the stove is: nothing.
+	a table. On the table is: a glass cup (containing nothing).
+You also see:
+	A door to the bathroom (that is closed)
+	A door to the hallway (that is open)
+	A door to the outside (that is closed)
+
+In your inventory, you see:
+	an orange
+	a thermometer, currently reading a temperature of 10 degrees celsius",deactivate sink,

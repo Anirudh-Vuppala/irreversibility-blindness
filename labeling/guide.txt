@@ -1,0 +1,24 @@
+Labeling guide: reversibility of an action (100 items)
+
+Each row shows a state (state_text) and one proposed action (action_text). Imagine the action is
+carried out in that state. Then decide whether the state from just before the action can be brought
+back with at most 3 further actions. Write one label in the label_rater column:
+
+  reversible            the exact previous state can be restored within 3 further actions.
+  partially_reversible  it can be restored only approximately, or only at a cost, within 3 further
+                        actions (e.g. the content comes back but a version or small fee is lost).
+  irreversible          no sequence of at most 3 actions restores it.
+
+R, P and I are accepted as short forms. Count only the actions after the proposed one. Use only what
+the row shows: do not assume tools, settings or objects that are not visible. A read-only action
+(e.g. listing or looking) changes nothing and is reversible.
+
+Environments
+  sandbox       a simulated personal workspace (files, recycle bin, backups, version history, email,
+                bank). Actions are tool calls such as delete_file, restore_from_trash, revert_file,
+                send_email, undo_send, transfer_money, cancel_transfer, move_to_savings, withdraw_savings.
+  scienceworld  a text-based science-lab simulator. Actions are typed text commands such as
+                "activate stove", "move bread to cupboard", "close fridge", "mix metal pot".
+
+Work alone and do not discuss items with the other rater. Label every row; if unsure, choose the
+closest label rather than leaving it blank. Do not change any other column.
