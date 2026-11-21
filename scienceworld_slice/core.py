@@ -71,6 +71,19 @@ def state_digest(tree):
     return hashlib.sha256(state_key(tree).encode("utf-8")).hexdigest()
 
 
+def matched_state_relation(candidate_tree, wait_control_tree, candidate_look, wait_control_look):
+    """Compare canonical trees and current look reports against a matched wait branch."""
+    if candidate_look != wait_control_look:
+        return None
+    if state_key(candidate_tree) == state_key(wait_control_tree):
+        return "exact"
+    if state_key(candidate_tree, drop_temperatures=True) == state_key(
+        wait_control_tree, drop_temperatures=True
+    ):
+        return "temperature_only"
+    return None
+
+
 def build_parent_index(tree):
     """Return object-ID parents from ScienceWorld's nested contents tree."""
     parents = {}

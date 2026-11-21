@@ -20,9 +20,9 @@ from scienceworld_slice.core import (
     expand_with_parents,
     focus_candidates,
     labels_from_depths,
+    matched_state_relation,
     restoration_candidates,
     state_digest,
-    state_key,
 )
 
 
@@ -112,6 +112,7 @@ def _run_candidate(job, max_depth):
     rebuild_count += 1
     target_raw = _WORKER_ENV.getObjectTree()
     target = canonicalize_tree(target_raw)
+    target_look = _WORKER_ENV.look()
     parent_index = build_parent_index(target)
     initial_ids = {int(value) for value in job["object_ids"]}
     allowed_ids = expand_with_parents(initial_ids, parent_index)
@@ -125,22 +126,34 @@ def _run_candidate(job, max_depth):
             "rebuild_count": rebuild_count,
             "evaluated_edges": evaluated_edges,
         }
-    observation, _, _, _ = _WORKER_ENV.step(job["action_text"])
+    action_observation, reward, done, _ = _WORKER_ENV.step(job["action_text"])
     post = canonicalize_tree(_WORKER_ENV.getObjectTree())
+    action_look = _WORKER_ENV.look()
 
-    exact_depth = 0 if state_key(post) == state_key(target) else None
-    partial_depth = 0 if state_key(post, drop_temperatures=True) == state_key(target, drop_temperatures=True) and exact_depth is None else None
+    wait_controls = {}
+    for wait_count in range(1, max_depth + 2):
+        _rebuild(job, ["wait1"] * wait_count)
+        rebuild_count += 1
+        wait_controls[wait_count] = {
+            "tree": canonicalize_tree(_WORKER_ENV.getObjectTree()),
+            "look": _WORKER_ENV.look(),
+        }
+
+    relation = matched_state_relation(
+        post, wait_controls[1]["tree"], action_look, wait_controls[1]["look"]
+    )
+    exact_depth = 0 if relation == "exact" else None
+    partial_depth = 0 if relation == "temperature_only" else None
     restore_sequence = [] if exact_depth == 0 or partial_depth == 0 else None
     visited = {state_digest(post)}
     frontier = [()]
 
-    for depth in range(1, max_depth + 1):
+    for depth in (range(1, max_depth + 1) if exact_depth is None else ()):
         next_frontier = []
         found_exact = False
         for path in frontier:
             _rebuild(job, [job["action_text"], *path])
             rebuild_count += 1
-            node_tree = canonicalize_tree(_WORKER_ENV.getObjectTree())
             action_strings, template_rows = _action_rows(_WORKER_ENV)
             candidates = restoration_candidates(
                 action_strings, template_rows, allowed_ids, job["action_text"]
@@ -151,12 +164,19 @@ def _run_candidate(job, max_depth):
                 rebuild_count += 1
                 if not _action_is_available(_WORKER_ENV, action):
                     continue
-                observation, _, _, _ = _WORKER_ENV.step(action)
+                _WORKER_ENV.step(action)
                 evaluated_edges += 1
                 next_state = canonicalize_tree(_WORKER_ENV.getObjectTree())
+                next_look = _WORKER_ENV.look()
                 new_path = (*path, action)
 
-                if state_key(next_state) == state_key(target):
+                relation = matched_state_relation(
+                    next_state,
+                    wait_controls[depth + 1]["tree"],
+                    next_look,
+                    wait_controls[depth + 1]["look"],
+                )
+                if relation == "exact":
                     exact_depth = depth
                     restore_sequence = list(new_path)
                     found_exact = True
@@ -164,8 +184,7 @@ def _run_candidate(job, max_depth):
 
                 if (
                     partial_depth is None
-                    and state_key(next_state, drop_temperatures=True)
-                    == state_key(target, drop_temperatures=True)
+                    and relation == "temperature_only"
                 ):
                     partial_depth = depth
                     if restore_sequence is None:
@@ -192,7 +211,7 @@ def _run_candidate(job, max_depth):
         "action_text": job["action_text"],
         "label": labels[str(horizon)],
         "horizon": horizon,
-        "source": "scienceworld-gold-replay-v1",
+        "source": "scienceworld-matched-wait-look-v2",
         "labels_by_horizon": labels,
         "scenario_id": job["scenario_id"],
         "group_id": job["group_id"],
@@ -211,6 +230,12 @@ def _run_candidate(job, max_depth):
         "history_length": len(job["history"]),
         "task_name": job["task_name"],
         "variation": job["variation"],
+        "action_observation": action_observation,
+        "action_reward": reward,
+        "action_done": done,
+        "state_look": target_look,
+        "action_state_look": action_look,
+        "label_control": "matched wait1 branch with equal action-call count",
     }
     return {
         "status": "ok",
@@ -513,7 +538,8 @@ def main(argv=None):
         "total_output_rows": total_rows,
         "mean_seconds_per_completed_pair": sum(durations) / len(durations) if durations else None,
         "elapsed_seconds": time.perf_counter() - started,
-        "state_comparison": "canonical tree; move counters removed; temperature fields rounded to 0.1 C; temperature-only matches labeled partially reversible",
+        "state_comparison": "canonical object tree plus current look report compared with same-task/history wait1 branch of equal action-call count; only move counters are removed and temperatures rounded to 0.1 C",
+        "label_definition": "ScienceWorld only: reversible when action plus restoration sequence matches the equal-length wait1 control in canonical object tree and current look report; partially reversible when look matches and only temperature fields differ; otherwise irreversible. Sandbox labels are unchanged.",
         "state_reconstruction": "reload task and variation, reset, replay recorded action history",
     }
     metadata_path.parent.mkdir(parents=True, exist_ok=True)

@@ -7,6 +7,7 @@ from scienceworld_slice.core import (
     expand_with_parents,
     focus_candidates,
     labels_from_depths,
+    matched_state_relation,
     restoration_candidates,
     state_key,
 )
@@ -34,6 +35,30 @@ def test_state_key_ignores_move_count_and_small_temperature_noise():
     first = {"moveCount": 2, "propMaterial": {"temperatureC": 20.121}}
     second = {"moveCount": 9, "propMaterial": {"temperatureC": 20.124}}
     assert state_key(first) == state_key(second)
+
+
+def test_matched_wait_relation_uses_only_agreed_canonicalization():
+    control = {
+        "moveCount": 1,
+        "contents": {"water": {"temperatureC": 10.04, "amount": 2}},
+    }
+    exact = {
+        "moveCount": 9,
+        "contents": {"water": {"temperatureC": 10.03, "amount": 2}},
+    }
+    temperature_only = {
+        "contents": {"water": {"temperatureC": 10.2, "amount": 2}},
+    }
+    unrelated_drift = {
+        "contents": {"water": {"temperatureC": 10.04, "amount": 3}},
+    }
+
+    assert matched_state_relation(exact, control, "door closed", "door closed") == "exact"
+    assert matched_state_relation(
+        temperature_only, control, "door closed", "door closed"
+    ) == "temperature_only"
+    assert matched_state_relation(unrelated_drift, control, "door closed", "door closed") is None
+    assert matched_state_relation(exact, control, "door open", "door closed") is None
 
 
 def test_object_parent_index_expands_scope_to_original_container():
