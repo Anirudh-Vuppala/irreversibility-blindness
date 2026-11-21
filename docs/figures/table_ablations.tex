@@ -1,0 +1,82 @@
+\begin{tabular}{lllll}
+\hline
+Ablation & Setting & Metric & Qwen2.5-7B & Llama-3.1-8B \\
+\hline
+token position & last token, three-class, all rows & balanced accuracy & 0.818 [0.797, 0.839] & 0.833 [0.810, 0.855] \\
+ & mean token, three-class, all rows & balanced accuracy & 0.854 [0.835, 0.873] & 0.853 [0.832, 0.873] \\
+ & last token, binary, all rows & balanced accuracy & 0.874 [0.853, 0.895] & 0.858 [0.834, 0.881] \\
+ & mean token, binary, all rows & balanced accuracy & 0.901 [0.883, 0.919] & 0.883 [0.861, 0.904] \\
+\hline
+label granularity & three-class & balanced accuracy & 0.854 [0.835, 0.873] & 0.853 [0.832, 0.873] \\
+ & binary & balanced accuracy & 0.901 [0.883, 0.919] & 0.865 [0.843, 0.886] \\
+\hline
+rows & all rows, three-class & balanced accuracy & 0.854 [0.835, 0.873] & 0.853 [0.832, 0.873] \\
+ & all rows, binary & balanced accuracy & 0.901 [0.883, 0.919] & 0.865 [0.843, 0.886] \\
+ & minimal pairs only, three-class & balanced accuracy & 0.858 [0.838, 0.877] & 0.862 [0.842, 0.880] \\
+ & minimal pairs only, binary & balanced accuracy & 0.897 [0.877, 0.919] & 0.894 [0.873, 0.915] \\
+\hline
+prompt (RQ3, 60 pairs) & neutral prompt & caution rate, irreversible & 0.000 & 0.070 \\
+ & neutral prompt & caution rate, reversible & 0.000 & 0.119 \\
+ & neutral prompt & A & 0 of 51 pairs ($\le$ 0.059) & 0 of 56 pairs ($\le$ 0.054) \\
+ & careful prompt & caution rate, irreversible & 0.019 & 0.491 \\
+ & careful prompt & caution rate, reversible & 0.020 & 0.450 \\
+ & careful prompt & A & 0 of 44 pairs ($\le$ 0.068) & 0.018 [0.000, 0.055] \\
+\hline
+cross-environment transfer & sandbox$\rightarrow$scienceworld, three-class, last token, probe & balanced accuracy & 0.261 [0.231, 0.295] & 0.304 [0.284, 0.322] \\
+ & sandbox$\rightarrow$scienceworld, three-class, last token, shuffled label & balanced accuracy & 0.295 [0.251, 0.336] & 0.371 [0.336, 0.426] \\
+ & sandbox$\rightarrow$scienceworld, three-class, last token, majority & balanced accuracy & 0.333 [0.333, 0.333] & 0.333 [0.333, 0.333] \\
+ & sandbox$\rightarrow$scienceworld, three-class, mean token, probe & balanced accuracy & 0.249 [0.216, 0.299] & 0.242 [0.154, 0.297] \\
+ & sandbox$\rightarrow$scienceworld, three-class, mean token, shuffled label & balanced accuracy & 0.347 [0.283, 0.410] & 0.333 [0.313, 0.365] \\
+ & sandbox$\rightarrow$scienceworld, three-class, mean token, majority & balanced accuracy & 0.333 [0.333, 0.333] & 0.333 [0.333, 0.333] \\
+ & sandbox$\rightarrow$scienceworld, binary, last token, probe & balanced accuracy & 0.501 [0.399, 0.561] & 0.477 [0.381, 0.557] \\
+ & sandbox$\rightarrow$scienceworld, binary, last token, shuffled label & balanced accuracy & 0.436 [0.380, 0.509] & 0.696 [0.630, 0.779] \\
+ & sandbox$\rightarrow$scienceworld, binary, last token, majority & balanced accuracy & 0.500 [0.500, 0.500] & 0.500 [0.500, 0.500] \\
+ & sandbox$\rightarrow$scienceworld, binary, mean token, probe & balanced accuracy & 0.585 [0.514, 0.661] & 0.472 [0.390, 0.541] \\
+ & sandbox$\rightarrow$scienceworld, binary, mean token, shuffled label & balanced accuracy & 0.471 [0.394, 0.557] & 0.666 [0.601, 0.759] \\
+ & sandbox$\rightarrow$scienceworld, binary, mean token, majority & balanced accuracy & 0.500 [0.500, 0.500] & 0.500 [0.500, 0.500] \\
+ & scienceworld$\rightarrow$sandbox, three-class, last token, probe & balanced accuracy & 0.332 [0.331, 0.333] & 0.306 [0.297, 0.314] \\
+ & scienceworld$\rightarrow$sandbox, three-class, last token, shuffled label & balanced accuracy & 0.333 [0.333, 0.333] & 0.334 [0.332, 0.336] \\
+ & scienceworld$\rightarrow$sandbox, three-class, last token, majority & balanced accuracy & 0.333 [0.333, 0.333] & 0.333 [0.333, 0.333] \\
+ & scienceworld$\rightarrow$sandbox, three-class, mean token, probe & balanced accuracy & 0.326 [0.321, 0.330] & 0.309 [0.300, 0.318] \\
+ & scienceworld$\rightarrow$sandbox, three-class, mean token, shuffled label & balanced accuracy & 0.336 [0.324, 0.347] & 0.332 [0.329, 0.335] \\
+ & scienceworld$\rightarrow$sandbox, three-class, mean token, majority & balanced accuracy & 0.333 [0.333, 0.333] & 0.333 [0.333, 0.333] \\
+ & scienceworld$\rightarrow$sandbox, binary, last token, probe & balanced accuracy & 0.500 [0.500, 0.500] & 0.475 [0.465, 0.485] \\
+ & scienceworld$\rightarrow$sandbox, binary, last token, shuffled label & balanced accuracy & 0.500 [0.500, 0.500] & 0.500 [0.500, 0.500] \\
+ & scienceworld$\rightarrow$sandbox, binary, last token, majority & balanced accuracy & 0.500 [0.500, 0.500] & 0.500 [0.500, 0.500] \\
+ & scienceworld$\rightarrow$sandbox, binary, mean token, probe & balanced accuracy & 0.500 [0.500, 0.500] & 0.503 [0.498, 0.508] \\
+ & scienceworld$\rightarrow$sandbox, binary, mean token, shuffled label & balanced accuracy & 0.500 [0.500, 0.500] & 0.497 [0.494, 0.499] \\
+ & scienceworld$\rightarrow$sandbox, binary, mean token, majority & balanced accuracy & 0.500 [0.500, 0.500] & 0.500 [0.500, 0.500] \\
+\hline
+ScienceWorld horizon & h = 1, three-class, probe & balanced accuracy & 0.748 [0.698, 0.806] & 0.671 [0.630, 0.800] \\
+ & h = 1, three-class, majority & balanced accuracy & 0.333 [0.333, 0.444] & 0.333 [0.333, 0.444] \\
+ & h = 1, binary, probe & balanced accuracy & 0.863 [0.830, 0.967] & 0.870 [0.834, 0.961] \\
+ & h = 1, binary, majority & balanced accuracy & 0.500 [0.500, 0.833] & 0.500 [0.500, 0.833] \\
+ & h = 2, three-class, probe & balanced accuracy & 0.765 [0.698, 0.828] & 0.809 [0.752, 0.851] \\
+ & h = 2, three-class, majority & balanced accuracy & 0.333 [0.333, 0.444] & 0.333 [0.333, 0.444] \\
+ & h = 2, binary, probe & balanced accuracy & 0.900 [0.878, 0.990] & 0.903 [0.879, 0.994] \\
+ & h = 2, binary, majority & balanced accuracy & 0.500 [0.500, 0.833] & 0.500 [0.500, 0.833] \\
+ & h = 3, three-class, probe & balanced accuracy & 0.761 [0.697, 0.825] & 0.806 [0.751, 0.845] \\
+ & h = 3, three-class, majority & balanced accuracy & 0.333 [0.333, 0.444] & 0.333 [0.333, 0.444] \\
+ & h = 3, binary, probe & balanced accuracy & 0.900 [0.878, 0.990] & 0.903 [0.879, 0.994] \\
+ & h = 3, binary, majority & balanced accuracy & 0.500 [0.500, 0.833] & 0.500 [0.500, 0.833] \\
+\hline
+leave-one-tool-out$^\dagger$ & three-class, probe, mean over all tools & accuracy & 0.548 & 0.583 \\
+ & three-class, train majority, mean over all tools & accuracy & 0.695 & 0.695 \\
+ & three-class, probe, mean over mixed-label tools & accuracy & 0.443 & 0.406 \\
+ & three-class, train majority, mean over mixed-label tools & accuracy & 0.420 & 0.420 \\
+ & binary, probe, mean over all tools & accuracy & 0.685 & 0.725 \\
+ & binary, train majority, mean over all tools & accuracy & 0.823 & 0.823 \\
+ & binary, probe, mean over mixed-label tools & accuracy & 0.454 & 0.444 \\
+ & binary, train majority, mean over mixed-label tools & accuracy & 0.439 & 0.439 \\
+\hline
+full-prompt text baseline$^\dagger$ & bow, all rows, binary & balanced accuracy & 0.714 & 0.714 \\
+ & tfidf, all rows, binary & balanced accuracy & 0.575 & 0.575 \\
+ & bow, all rows, three-class & balanced accuracy & 0.619 & 0.619 \\
+ & tfidf, all rows, three-class & balanced accuracy & 0.513 & 0.513 \\
+ & bow, minimal rows, binary & balanced accuracy & 0.715 & 0.715 \\
+ & tfidf, minimal rows, binary & balanced accuracy & 0.596 & 0.596 \\
+ & bow, minimal rows, three-class & balanced accuracy & 0.605 & 0.605 \\
+ & tfidf, minimal rows, three-class & balanced accuracy & 0.529 & 0.529 \\
+\hline
+\multicolumn{5}{l}{$^\dagger$ post-hoc, not in the original plan. Brackets: 95\% bootstrap CI where saved.} \\
+\end{tabular}

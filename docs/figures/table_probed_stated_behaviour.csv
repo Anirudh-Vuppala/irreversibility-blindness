@@ -1,0 +1,23 @@
+model,panel,measure,value,ci_low,ci_high,n,reference,reference_name,source
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",three-class accuracy,0.864542323270976,0.8484262695874002,0.8813844907934668,"[403, 408, 407]",0.5065967162741356,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",three-class balanced accuracy,0.8542890336518919,0.8354767827005459,0.8726015426880156,"[403, 408, 407]",0.3333333333333333,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",three-class AUROC,0.9633446719081759,0.9563612711480662,0.9705559672231187,"[403, 408, 407]",0.5,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",binary accuracy,0.9032171157982997,0.8865985469888106,0.919901228323016,"[306, 315, 317]",0.6579773023825725,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",binary balanced accuracy,0.9006275591487768,0.8829683468650995,0.9186523296521965,"[306, 315, 317]",0.5,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"probe (sandbox, train-selected layer)",binary AUROC,0.9642412169560218,0.9551280166934892,0.9734002417132122,"[306, 315, 317]",0.5,majority class,results/analysis/Qwen_Qwen2.5-7B-Instruct/probes_summary.csv
+Qwen2.5-7B,"stated (RQ2, prompt v2)",three-class accuracy,0.35974842767295595,,,1590,,,results/analysis/Qwen_Qwen2.5-7B-Instruct/rq2_summary.json
+Qwen2.5-7B,"stated (RQ2, prompt v2)",K (all RQ2 pairs),0.025193798449612403,0.011627906976744186,0.040697674418604654,516,,,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,"behaviour (RQ3, 60 pairs, neutral)",caution on irreversible,0.0,,,51,,,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,"behaviour (RQ3, 60 pairs, neutral)",caution on reversible,0.0,,,51,,,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,"behaviour (RQ3, 60 pairs, neutral)",A (paired),0.0,0.0,0.0,51,,,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",three-class accuracy,0.8677675449497082,0.8503857696394088,0.8849050325692109,"[403, 408, 407]",0.5065967162741356,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",three-class balanced accuracy,0.8531508755142813,0.8322118320435323,0.8732820340500296,"[403, 408, 407]",0.3333333333333333,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",three-class AUROC,0.9670452602899803,0.9607481445900955,0.9731512489822263,"[403, 408, 407]",0.5,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",binary accuracy,0.884929814898269,0.8657860109337778,0.9029989294127935,"[306, 315, 317]",0.6579773023825725,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",binary balanced accuracy,0.8653683649586612,0.8433102906422951,0.8863756584326518,"[306, 315, 317]",0.5,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"probe (sandbox, train-selected layer)",binary AUROC,0.9559811757003424,0.9458969079952474,0.9655270710011129,"[306, 315, 317]",0.5,majority class,results/analysis/meta-llama_Llama-3.1-8B-Instruct/probes_summary.csv
+Llama-3.1-8B,"stated (RQ2, prompt v2)",three-class accuracy,0.3139608338597599,,,1583,,,results/analysis/meta-llama_Llama-3.1-8B-Instruct/rq2_summary.json
+Llama-3.1-8B,"stated (RQ2, prompt v2)",K (all RQ2 pairs),0.0,0.0,0.0,511,,,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,"behaviour (RQ3, 60 pairs, neutral)",caution on irreversible,0.07017543859649122,,,56,,,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,"behaviour (RQ3, 60 pairs, neutral)",caution on reversible,0.11864406779661017,,,56,,,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,"behaviour (RQ3, 60 pairs, neutral)",A (paired),0.0,0.0,0.0,56,,,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json

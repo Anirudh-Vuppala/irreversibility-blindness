@@ -121,18 +121,29 @@ On a Kaggle T4, load one model per session with float16 and `device_map="auto"`.
 
 ## Reproduce
 
-1. **Environment.** Python 3.11 in a venv with `pip install -r requirements.txt` (see Setup). Hugging Face access to `meta-llama/Llama-3.1-8B-Instruct` is needed for Llama.
-2. **Data.** `data/sandbox.jsonl` is committed. `python -m reversibility.generate --scenarios 265 --seed 0 --out results/sandbox-regenerated.jsonl` reproduces it byte for byte in about a second. See `docs/data_card.md`.
+1. **Environment.** Python 3.11 in a venv with `pip install -r requirements.txt` (every dependency pinned with `==`; see Setup). Hugging Face access to `meta-llama/Llama-3.1-8B-Instruct` is needed for Llama. On Kaggle, keep the image's PyTorch and run `pip install transformers==4.49.0 accelerate==1.4.0 tokenizers==0.21.0 huggingface-hub==0.29.3` (the versions used for the reported runs).
+2. **Data.** `data/sandbox.jsonl` is committed. `python -m reversibility.generate --scenarios 265 --seed 0 --out results/sandbox-regenerated.jsonl` reproduces it byte for byte in about a second. `data/scienceworld.jsonl` is committed too; `scripts/run_scienceworld_slice.sh` regenerates it in the background with `scienceworld_slice/build_slice.py` (needs `scienceworld==1.2.3` and Java; resumable; `LIMIT`, `VARIATIONS`, `MAX_SECONDS` set the size and time limit; log in `results/scienceworld/gen.log`). See `docs/data_card.md`.
 3. **Kaggle extraction, RQ2 and RQ3** (GPU T4 x2, one model per session, `HF_TOKEN` in Kaggle Secrets). `kaggle/run_full.py` runs pilot, disk check, hidden-state extraction, RQ2 (prompt v2, three-class, h3, neutral) and RQ3 (60 rows, 15 turns, both prompt conditions), then zips `results/<model>/` to `/kaggle/working`. Each step resumes from its own logs.
    ```bash
    python kaggle/run_full.py --model Qwen/Qwen2.5-7B-Instruct
    python kaggle/run_full.py --model meta-llama/Llama-3.1-8B-Instruct --only rq3   # one step, then re-zip
+   python kaggle/run_full.py --model Qwen/Qwen2.5-7B-Instruct --only rq3 --rq3-batch extra   # second 30 RQ3 pairs
+   python kaggle/run_full.py --model Qwen/Qwen2.5-7B-Instruct --env scienceworld   # ScienceWorld: extract + RQ2 only
    ```
-   Flags: `--model` (required), `--input`, `--results-root`, `--zip-dir`, `--hf-cache` (default `/tmp/hf_cache` on Kaggle), `--device {cpu,auto}` (default auto), `--pilot-rows 50`, `--rq2-pairs` (default all eligible pairs), `--rq3-rows 60`, and either `--stop-after STEP` or `--only STEP` (steps: pilot, disk, extract, rq2, rq3, zip). Rough times per model: extraction 12 min, RQ2 1.5–2 h, RQ3 30–50 min; about 1 GB of arrays per model.
+   Flags: `--model` (required), `--env {sandbox,scienceworld}`, `--rq3-batch {main,extra}`, `--input`, `--results-root`, `--zip-dir`, `--hf-cache` (default `/tmp/hf_cache` on Kaggle), `--device {cpu,auto}` (default auto), `--pilot-rows 50`, `--rq2-pairs` (default all eligible pairs), `--rq3-rows 60`, and either `--stop-after STEP` or `--only STEP` (steps: pilot, disk, extract, rq2, rq3, zip). `--env scienceworld` writes `results/<model>/sw/` and `<model>_sw_results.zip`. Rough times per model: extraction 12 min, RQ2 1.5–2 h, RQ3 30–50 min per batch; ScienceWorld 7–8 min extraction and 12–15 min RQ2; about 1 GB of arrays per model.
 4. **Local analysis** (CPU only). Unzip each model's results under `results/`, then
    ```bash
    nohup scripts/run_probes.sh Qwen_Qwen2.5-7B-Instruct meta-llama_Llama-3.1-8B-Instruct >/dev/null 2>&1 &
    python -m experiments.posthoc --model-dir results/Qwen_Qwen2.5-7B-Instruct   # post-hoc analyses
+   python -m experiments.analyze_sw --model-dir results/Qwen_Qwen2.5-7B-Instruct   # ScienceWorld probes, transfer, horizons
+   python -m experiments.make_final_tables   # report figures and tables from saved files
    ```
-   `run_probes.sh` runs `experiments/analyze.py` (probes for every layer and position, then the RQ2/RQ3 recomputation, Gap and figures) and logs to `results/analysis/run_<model>.log`; it resumes finished probe files. `JOBS` and `EXTRA_ARGS` (for example `--layer-stride 2`) are passed through. On an Apple M2 with 8 GB and 4 workers it took 3.2 h for Qwen and 6.1 h for Llama; the post-hoc script took about 1 min for the text baselines and 8 min (Qwen) and 15 min (Llama) for leave-one-tool-out.
-5. **Outputs.** Per model under `results/analysis/<model>/`: `probes_summary.csv`, `probes/`, `rq2_summary.json`, `rq3_summary.json`, `headline.json`, `v1_vs_v2_rq2.json`, `posthoc_*.json` and `figures/`. `results/` is not committed; the analysis plan is `docs/analysis_plan.md` and the run history is `docs/experiment_log.md`.
+   `run_probes.sh` runs `experiments/analyze.py` (probes for every layer and position, then the RQ2/RQ3 recomputation, Gap and figures) and logs to `results/analysis/run_<model>.log`; it resumes finished probe files. `JOBS` and `EXTRA_ARGS` (for example `--layer-stride 2`) are passed through. On an Apple M2 with 8 GB and 4 workers it took 3.2 h for Qwen and 6.1 h for Llama; the post-hoc script took about 1 min for the text baselines and 8 min (Qwen) and 15 min (Llama) for leave-one-tool-out; `analyze_sw` took 38 min (Qwen) and 55 min (Llama).
+5. **Human label check.** `python -m experiments.label_sample` wrote the blind sheets in `labeling/` (seed 2026; refuses to overwrite filled sheets). Raters fill `label_rater` in `labeling/sheet_rater1.csv`, `sheet_rater2.csv` and `sheet_rater1_retest.csv` using `labeling/guide.txt`; give raters only the sheets and the guide, not `answer_key.csv`. Then `python -m experiments.label_agreement` writes `results/analysis/human_agreement.json` (a missing second rater or retest is skipped).
+6. **Outputs.** Per model under `results/analysis/<model>/`: `probes_summary.csv`, `probes/`, `rq2_summary.json`, `rq3_summary*.json`, `headline.json`, `headline_h3_plus_extra.json`, `v1_vs_v2_rq2.json`, `posthoc_*.json`, `sw/` and `figures/`. Report figures and tables are in `results/analysis/final/` (with `headline_numbers.json`, every quoted number with its source file) and copied to `docs/figures/`. `results/` is not committed; the analysis plan is `docs/analysis_plan.md` and the run history is `docs/experiment_log.md`.
+
+### Demo
+
+`python scripts/demo_replay.py --model Qwen/Qwen2.5-7B-Instruct` replays one saved RQ3 pair (reversible, then irreversible version) step by step from `results/<model>/rq3/`, with no GPU or network.
+Options: `--condition {neutral,explicit-carefulness}`, `--pair-id sb-0003-p0`, `--delay 0.8` (seconds between steps).
+Without `--pair-id` it picks a pair that completed in both versions and prints which one.

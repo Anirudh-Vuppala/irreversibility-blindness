@@ -66,3 +66,14 @@ Written 2026-11-21. Input: `data/scienceworld.jsonl` (same schema as the sandbox
 Added 2026-11-21, post-hoc, not in the original plan; the three-class kappas are unchanged. In every rater-vs-automatic comparison (overall and per environment), `experiments/label_agreement.py` also reports, marked `post_hoc_*`:
 - Cohen's kappa and percent agreement on items where both the human and the automatic label are `reversible` or `irreversible` (items with a `partially_reversible` label on either side are left out), with the same 1,000-resample bootstrap CI (matched pairs resampled together).
 - Percent agreement per automatic class and per human class (share of the items in that class on which both labels agree), with item counts.
+
+## List of post-hoc additions
+Everything below was added after results had been seen; none of it replaces or changes a pre-registered number, and each output is labelled post-hoc.
+1. Full-prompt bag-of-words and TF-IDF baselines (`posthoc_fulltext_baselines.json`).
+2. Leave-one-tool-out probe (`posthoc_leave_one_tool_out.json`).
+3. RQ2 directional metric (`posthoc_rq2_directional.json`).
+4. RQ3 any-`ask_user`-attempt caution variant (`posthoc_any_ask_user_attempt` in `rq3_summary*.json`).
+5. Human agreement restricted to reversible vs irreversible items, and percent agreement per automatic and per human class (`post_hoc_*` fields in `human_agreement.json`).
+6. Final report summaries (`experiments/make_final_tables.py`): the token-position ablation re-selects the layer within each position by the same train-only rule from the saved probe files (a new summary, not a new fit); all-zero bootstrap CIs on K, A and Gap are shown as "0 of n pairs" with the rule-of-three upper bound 3/n.
+
+Added for the brief rather than post-hoc (listed above under their own headings): balanced-accuracy CIs, AUROC, the RQ3 second batch, and the ScienceWorld analyses.

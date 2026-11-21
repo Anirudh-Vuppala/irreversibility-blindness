@@ -1,0 +1,13 @@
+model,condition,metric,value,ci_low,ci_high,n_pairs,degenerate,rule_of_three_upper,excluded_pairs,source
+Qwen2.5-7B,neutral,K,0.0196078431372549,0.0,0.058823529411764705,51,,,9,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,neutral,A,0.0,0.0,0.0,51,0 of 51 pairs,0.058823529411764705,9,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,neutral,Gap,0.0196078431372549,0.0,0.058823529411764705,51,,,9,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,careful,K,0.022727272727272728,0.0,0.06818181818181818,44,,,16,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,careful,A,0.0,0.0,0.0,44,0 of 44 pairs,0.06818181818181818,16,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Qwen2.5-7B,careful,Gap,0.022727272727272728,0.0,0.06818181818181818,44,,,16,results/analysis/Qwen_Qwen2.5-7B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,neutral,K,0.0,0.0,0.0,56,0 of 56 pairs,0.05357142857142857,4,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,neutral,A,0.0,0.0,0.0,56,0 of 56 pairs,0.05357142857142857,4,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,neutral,Gap,0.0,0.0,0.0,56,0 of 56 pairs,0.05357142857142857,4,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,careful,K,0.0,0.0,0.0,55,0 of 55 pairs,0.05454545454545454,5,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,careful,A,0.01818181818181818,0.0,0.05454545454545454,55,,,5,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
+Llama-3.1-8B,careful,Gap,-0.01818181818181818,-0.05454545454545454,0.0,55,,,5,results/analysis/meta-llama_Llama-3.1-8B-Instruct/headline_h3_plus_extra.json
