@@ -63,7 +63,8 @@ def test_missing_or_empty_second_rater_reports_rater1_vs_auto_only(tmp_path):
     _write(tmp_path / "empty.csv", SHEET_COLUMNS, [{**r, "label_rater": ""} for r in csv.DictReader(open(tmp_path / "r1.csv"))])
     out = tmp_path / "out.json"
     assert agreement_main(["--rater1", str(tmp_path / "r1.csv"), "--rater2", str(tmp_path / "empty.csv"), "--key",
-                           str(tmp_path / "key.csv"), "--out", str(out), "--bootstrap-resamples", "50"]) == 0
+                           str(tmp_path / "key.csv"), "--retest", str(tmp_path / "none.csv"), "--out", str(out),
+                           "--bootstrap-resamples", "50"]) == 0
     assert list(json.loads(out.read_text())["comparisons"]) == ["rater1_vs_auto"]
 
 
