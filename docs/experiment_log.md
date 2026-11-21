@@ -14,5 +14,5 @@
 - 2026-11-21, RQ3 extended to 60 pairs with a disjoint second batch of 30 (`--rq3-batch extra`): Qwen 28.7 min, Llama 53.8 min on Kaggle. The first-batch files are unchanged; merged results are in `headline_h3_plus_extra.json`.
 - 2026-11-21, ScienceWorld on Kaggle (`--env scienceworld`, 512 rows, 111 RQ2 pairs = 222 rows): Qwen extraction 7.1 min, RQ2 12.5 min; Llama extraction 8.0 min, RQ2 14.7 min (3 parse failures, so the runner marked the step incomplete). Only 10 (Qwen) and 9 (Llama) pairs have one reversible and one irreversible member, so K rests on very few pairs.
 - 2026-11-21, local ScienceWorld analysis (`experiments.analyze_sw`, every second layer): Qwen 37.9 min, Llama 55.4 min.
-- 2026-11-21, human label check: 100 blind items labelled by one annotator; kappa vs automatic labels 0.26 overall; reversible-vs-irreversible-only kappa 0.68 (post-hoc). No second rater or retest yet.
+- 2026-11-21, human label check: 100 blind items labelled by one annotator; kappa vs automatic labels 0.26 overall; reversible-vs-irreversible-only kappa 0.68 (post-hoc). No second rater. Retest of 30 items about 12h44m later, same day: kappa 0.45 [0.19, 0.68] (sandbox 0.57, ScienceWorld 0.38).
 - 2026-11-21: `experiments/make_final_tables.py` builds the report figures and tables from saved files only (about 4 s).
