@@ -28,3 +28,6 @@ checkpoints/
 # Secrets and local results
 .env
 results/
+
+# Submission bundle (built by scripts/package_results.sh)
+submission/
